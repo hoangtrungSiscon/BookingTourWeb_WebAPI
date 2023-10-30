@@ -1,4 +1,5 @@
 global using BookingTourWeb_WebAPI.Models;
+global using System.Linq;
 
 var builder = WebApplication.CreateBuilder(args);
 

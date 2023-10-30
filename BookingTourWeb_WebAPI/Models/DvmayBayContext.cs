@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using BookingTourWeb_WebAPI.Models;
 
 namespace BookingTourWeb_WebAPI.Models;
 
@@ -155,4 +156,6 @@ public partial class DvmayBayContext : DbContext
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+    public DbSet<BookingTourWeb_WebAPI.Models.ThongTinChuyenBay>? ThongTinChuyenBay { get; set; }
 }
