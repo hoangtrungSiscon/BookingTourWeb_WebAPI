@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BookingTourWeb_WebAPI.Models;
+using System.Globalization;
 
 namespace BookingTourWeb_WebAPI.Controllers
 {
@@ -30,105 +31,26 @@ namespace BookingTourWeb_WebAPI.Controllers
             }
             return await _context.Chuyenbays.ToListAsync();
         }
-        //[HttpGet]
-        //public async Task<ActionResult<List<Chuyenbay>>> GetChuyenbays()
-        //{
-        //    if (_context.Chuyenbays == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    return await _context.Chuyenbays.ToListAsync();
-        //}
-
-        // GET: api/Chuyenbays/5
-
-
-
 
 
         //[HttpGet]
-        //public IEnumerable<ThongTinChuyenBay> GetQuanLyChuyenBay()
+        //public async Task<ActionResult<IEnumerable<ChuyenbayViewModel>>> GetChuyenbays()
         //{
-
-
-
-
-        //return await _context.Chuyenbays.ToListAsync();
-        //var result = _context.Chuyenbays
-        //    .Join(_context.Maybays,
-        //    chuyenbay => chuyenbay.MaMayBay,
-        //    maybay => maybay.MaMayBay,
-        //    (chuyenbay, maybay) => new
-        //    {
-        //        ChuyenbayId = chuyenbay.MaChuyenBay,
-        //        ChuyenbayInfo = chuyenbay,
-        //        MaybayInfo = maybay
-        //    })
-        //.ToList();
-
-        //return Ok(result);
-        //-------------------------------------------------------------------------
-        //var thongtinchuyenbay = (from chuyenbay in _context.Chuyenbays
-        //                         join maybay in _context.Maybays
-        //                         on chuyenbay.MaMayBay equals maybay.MaMayBay
-        //                         select new
-        //                         {
-        //                             Machuyen = chuyenbay.MaChuyenBay,
-        //                             Mamaybay = chuyenbay.MaMayBay,
-        //                             Tenmaybay = maybay.TenMayBay,
-        //                             Noidi = chuyenbay.NoiXuatPhat,
-        //                             Noiden = chuyenbay.NoiDen,
-        //                             Ngayxuatphat = chuyenbay.NgayXuatPhat,
-        //                             Giobay = chuyenbay.GioBay,
-        //                             Sl_BSN = chuyenbay.SoLuongVeBsn,
-        //                             SL_ECO = chuyenbay.SoLuongVeEco,
-        //                             Gia = chuyenbay.DonGia,
-        //                         })
-        //.ToListAsync();
-        //return Ok(thongtinchuyenbay);
-
-        //-------------------------------------------------------------------------------------
-        //var thongtinchuyenbay = (
-        //    _context.Chuyenbays
-        //    .Join(_context.Maybays,
-        //        p => p.MaMayBay,
-        //        e => e.MaMayBay,
-        //        (p, e) => new
+        //    var chuyenbays = await _context.Chuyenbays.ToListAsync();
+        //        var chuyenbaysViewModel = chuyenbays.Select(chuyenbay => new ChuyenbayViewModel
         //        {
-        //            Machuyen = p.MaChuyenBay,
-        //            Mamaybay = p.MaMayBay,
-        //            Tenmaybay = e.TenMayBay,
-        //            Noidi = p.NoiXuatPhat,
-        //            Noiden = p.NoiDen,
-        //            Ngayxuatphat = p.NgayXuatPhat,
-        //            Giobay = p.GioBay,
-        //            Sl_BSN = p.SoLuongVeBsn,
-        //            SL_ECO = p.SoLuongVeEco,
-        //            Gia = p.DonGia,
-        //        }
-        //    ).ToList()
-        //    );
-        //return Ok(thongtinchuyenbay);
-        //---------------------------------------------------------------
+        //            MaChuyenBay = chuyenbay.MaChuyenBay,
+        //            MaMayBay = chuyenbay.MaMayBay,
+        //            GioBay = chuyenbay.GioBay.ToString("c"), // Chuyển đổi TimeSpan thành chuỗi
+        //            NoiXuatPhat = chuyenbay.NoiXuatPhat,
+        //            NoiDen = chuyenbay.NoiDen,
+        //            NgayXuatPhat = chuyenbay.NgayXuatPhat,
+        //            DonGia = chuyenbay.DonGia,
+        //            SoLuongVeBsn = chuyenbay.SoLuongVeBsn,
+        //            SoLuongVeEco = chuyenbay.SoLuongVeEco
+        //        }).ToList();
 
-        //    var thongtinchuyenbay = (from chuyenbay in _context.Chuyenbays
-        //                             join maybay in _context.Maybays
-        //                             on chuyenbay.MaMayBay equals maybay.MaMayBay
-        //                             select new ThongTinChuyenBay()
-        //                             {
-        //                                 MaChuyenBay = chuyenbay.MaChuyenBay,
-        //                                 MaMayBay = chuyenbay.MaMayBay,
-        //                                 TenMayBay = maybay.TenMayBay,
-        //                                 NoiXuatPhat = chuyenbay.NoiXuatPhat,
-        //                                 NoiDen = chuyenbay.NoiDen,
-        //                                 NgayXuatPhat = chuyenbay.NgayXuatPhat,
-        //                                 GioBay = chuyenbay.GioBay,
-        //                                 SoLuongVeBsn = chuyenbay.SoLuongVeBsn,
-        //                                 SoLuongVeEco = chuyenbay.SoLuongVeEco,
-        //                                 DonGia = chuyenbay.DonGia,
-        //                             })
-        //    .ToList();
-        //    return thongtinchuyenbay;
+        //    return chuyenbaysViewModel;
         //}
 
 
@@ -182,14 +104,13 @@ namespace BookingTourWeb_WebAPI.Controllers
         }
 
         // POST: api/Chuyenbays
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Chuyenbay>> PostChuyenbay(Chuyenbay chuyenbay)
         {
-          if (_context.Chuyenbays == null)
-          {
-              return Problem("Entity set 'DvmayBayContext.Chuyenbays'  is null.");
-          }
+            if (_context.Chuyenbays == null)
+            {
+                return Problem("Entity set 'DvmayBayContext.Chuyenbays'  is null.");
+            }
             _context.Chuyenbays.Add(chuyenbay);
             try
             {
@@ -209,6 +130,55 @@ namespace BookingTourWeb_WebAPI.Controllers
 
             return CreatedAtAction("GetChuyenbay", new { id = chuyenbay.MaChuyenBay }, chuyenbay);
         }
+
+
+        //[HttpPost]
+        //public async Task<ActionResult<ChuyenbayViewModel>> PostChuyenbay(ChuyenbayViewModel chuyenbayViewModel)
+        //{
+        //    if (chuyenbayViewModel == null)
+        //    {
+        //        return BadRequest("Invalid data.");
+        //    }
+
+        //    // Chuyển đổi dữ liệu từ ChuyenbayViewModel thành Chuyenbay
+        //    var chuyenbay = new Chuyenbay
+        //    {
+        //        MaChuyenBay = chuyenbayViewModel.MaChuyenBay,
+        //        MaMayBay = chuyenbayViewModel.MaMayBay,
+        //        // Chuyển đổi chuỗi GioBay thành TimeSpan
+        //        GioBay = TimeSpan.ParseExact(chuyenbayViewModel.GioBay, "c", CultureInfo.InvariantCulture),
+        //        NoiXuatPhat = chuyenbayViewModel.NoiXuatPhat,
+        //        NoiDen = chuyenbayViewModel.NoiDen,
+        //        NgayXuatPhat = chuyenbayViewModel.NgayXuatPhat,
+        //        DonGia = chuyenbayViewModel.DonGia,
+        //        SoLuongVeBsn = chuyenbayViewModel.SoLuongVeBsn,
+        //        SoLuongVeEco = chuyenbayViewModel.SoLuongVeEco
+        //    };
+
+        //    _context.Chuyenbays.Add(chuyenbay);
+
+        //    try
+        //    {
+        //        await _context.SaveChangesAsync();
+        //    }
+        //    catch (DbUpdateException)
+        //    {
+        //        if (ChuyenbayExists(chuyenbay.MaChuyenBay))
+        //        {
+        //            return Conflict();
+        //        }
+        //        else
+        //        {
+        //            throw;
+        //        }
+        //    }
+
+        //    // Trả về lớp ViewModel để hiển thị lại dữ liệu đã được lưu
+        //    return CreatedAtAction("GetChuyenbay", new { id = chuyenbay.MaChuyenBay }, chuyenbayViewModel);
+        //}
+
+
+
 
         // DELETE: api/Chuyenbays/5
         [HttpDelete("{id}")]

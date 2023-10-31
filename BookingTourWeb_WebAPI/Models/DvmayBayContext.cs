@@ -29,8 +29,8 @@ public partial class DvmayBayContext : DbContext
     public virtual DbSet<Ve> Ves { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=DESKTOP-7P5QA2G;Database=DVMayBay;Trusted_connection=true;TrustServerCertificate=True");
+//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Name=DVMayBayDB");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -68,7 +68,7 @@ public partial class DvmayBayContext : DbContext
 
             entity.Property(e => e.MaChuyenBay).HasMaxLength(100);
             entity.Property(e => e.DonGia).HasColumnType("decimal(15, 4)");
-            entity.Property(e => e.GioBay).HasPrecision(6);
+            //entity.Property(e => e.GioBay).HasPrecision(6);
             entity.Property(e => e.MaMayBay).HasMaxLength(10);
             entity.Property(e => e.NgayXuatPhat).HasColumnType("date");
             entity.Property(e => e.NoiDen).HasMaxLength(15);
@@ -76,10 +76,11 @@ public partial class DvmayBayContext : DbContext
             entity.Property(e => e.SoLuongVeBsn).HasColumnName("SoLuongVeBSN");
             entity.Property(e => e.SoLuongVeEco).HasColumnName("SoLuongVeECO");
 
-            entity.HasOne(d => d.MaMayBayNavigation).WithMany(p => p.Chuyenbays)
-                .HasForeignKey(d => d.MaMayBay)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_CHUYENBAY_MAYBAY");
+            //entity.HasOne(d => d.MaMayBayNavigation).WithMany(p => p.Chuyenbays)
+            //    .HasForeignKey(d => d.MaMayBay)
+            //    .OnDelete(DeleteBehavior.ClientSetNull)
+            //    .HasConstraintName("FK_CHUYENBAY_MAYBAY")
+            //    .IsRequired(false);
         });
 
         modelBuilder.Entity<Khachhang>(entity =>

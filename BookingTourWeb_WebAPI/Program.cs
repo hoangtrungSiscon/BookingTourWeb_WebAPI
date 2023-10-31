@@ -1,5 +1,6 @@
 global using BookingTourWeb_WebAPI.Models;
 global using System.Linq;
+global using Newtonsoft.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
