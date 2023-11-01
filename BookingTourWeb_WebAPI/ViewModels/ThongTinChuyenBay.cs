@@ -1,6 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
+using JsonIgnoreAttribute = Newtonsoft.Json.JsonIgnoreAttribute;
 
-namespace BookingTourWeb_WebAPI.Models
+namespace BookingTourWeb_WebAPI.ViewModels
 {
     public class ThongTinChuyenBay
     {
@@ -8,8 +11,9 @@ namespace BookingTourWeb_WebAPI.Models
         public string MaChuyenBay { get; set; } = null!;
 
         public string MaMayBay { get; set; } = null!;
-
-        public string TenMayBay { get; set; } = null!;
+        [JsonIgnore]
+        [AllowNull]
+        public string TenMayBay { get; set; } = System.String.Empty;
 
         public TimeSpan GioBay { get; set; }
 

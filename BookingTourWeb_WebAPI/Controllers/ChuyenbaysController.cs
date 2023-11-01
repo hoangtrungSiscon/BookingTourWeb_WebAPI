@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using BookingTourWeb_WebAPI.Models;
 using System.Globalization;
 
 namespace BookingTourWeb_WebAPI.Controllers

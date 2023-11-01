@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using BookingTourWeb_WebAPI.ViewModels;
 using Microsoft.EntityFrameworkCore;
-using BookingTourWeb_WebAPI.Models;
 
 namespace BookingTourWeb_WebAPI.Models;
 
@@ -29,7 +29,7 @@ public partial class DvmayBayContext : DbContext
     public virtual DbSet<Ve> Ves { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+        //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseSqlServer("Name=DVMayBayDB");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -68,7 +68,7 @@ public partial class DvmayBayContext : DbContext
 
             entity.Property(e => e.MaChuyenBay).HasMaxLength(100);
             entity.Property(e => e.DonGia).HasColumnType("decimal(15, 4)");
-            //entity.Property(e => e.GioBay).HasPrecision(6);
+            entity.Property(e => e.GioBay).HasPrecision(6);
             entity.Property(e => e.MaMayBay).HasMaxLength(10);
             entity.Property(e => e.NgayXuatPhat).HasColumnType("date");
             entity.Property(e => e.NoiDen).HasMaxLength(15);
@@ -158,5 +158,5 @@ public partial class DvmayBayContext : DbContext
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 
-    public DbSet<BookingTourWeb_WebAPI.Models.ThongTinChuyenBay>? ThongTinChuyenBay { get; set; }
+    public DbSet<ThongTinChuyenBay>? ThongTinChuyenBay { get; set; }
 }
