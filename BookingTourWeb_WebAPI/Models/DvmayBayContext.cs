@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using BookingTourWeb_WebAPI.ViewModels;
 using Microsoft.EntityFrameworkCore;
 
-namespace BookingTourWeb_WebAPI.Models;
+namespace BookingBackend.Models;
 
 public partial class DvmayBayContext : DbContext
 {
@@ -29,8 +28,8 @@ public partial class DvmayBayContext : DbContext
     public virtual DbSet<Ve> Ves { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Name=DVMayBayDB");
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Server=localhost;Database=DVMayBay;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -76,11 +75,10 @@ public partial class DvmayBayContext : DbContext
             entity.Property(e => e.SoLuongVeBsn).HasColumnName("SoLuongVeBSN");
             entity.Property(e => e.SoLuongVeEco).HasColumnName("SoLuongVeECO");
 
-            //entity.HasOne(d => d.MaMayBayNavigation).WithMany(p => p.Chuyenbays)
-            //    .HasForeignKey(d => d.MaMayBay)
-            //    .OnDelete(DeleteBehavior.ClientSetNull)
-            //    .HasConstraintName("FK_CHUYENBAY_MAYBAY")
-            //    .IsRequired(false);
+            entity.HasOne(d => d.MaMayBayNavigation).WithMany(p => p.Chuyenbays)
+                .HasForeignKey(d => d.MaMayBay)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_CHUYENBAY_MAYBAY");
         });
 
         modelBuilder.Entity<Khachhang>(entity =>
@@ -129,12 +127,10 @@ public partial class DvmayBayContext : DbContext
 
             entity.ToTable("TAIKHOAN");
 
-            entity.HasIndex(e => e.TaiKhoan1, "TAIKHOAN_TaiKhoan").IsUnique();
+            entity.HasIndex(e => e.TenTaiKhoan, "TAIKHOAN_TaiKhoan").IsUnique();
 
             entity.Property(e => e.MatKhau).HasMaxLength(50);
-            entity.Property(e => e.TaiKhoan1)
-                .HasMaxLength(50)
-                .HasColumnName("TaiKhoan");
+            entity.Property(e => e.TenTaiKhoan).HasMaxLength(50);
             entity.Property(e => e.VaiTro).HasDefaultValueSql("((2))");
         });
 
@@ -157,6 +153,4 @@ public partial class DvmayBayContext : DbContext
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
-
-    public DbSet<ThongTinChuyenBay>? ThongTinChuyenBay { get; set; }
 }

@@ -1,7 +1,5 @@
-global using BookingTourWeb_WebAPI.Models;
-global using System.Linq;
-global using Newtonsoft.Json;
-global using BookingTourWeb_WebAPI.ViewModels;
+using BookingBackend.Models;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,9 +8,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddDbContext<DvmayBayContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("default")));
 builder.Services.AddSwaggerGen();
-
-builder.Services.AddDbContext<DvmayBayContext>();
+builder.Services.AddHttpClient();
 
 var app = builder.Build();
 
@@ -24,6 +22,13 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors(options =>
+{
+    options.AllowAnyHeader();
+    options.AllowAnyMethod();
+    options.AllowAnyOrigin();
+});
 
 app.UseAuthorization();
 

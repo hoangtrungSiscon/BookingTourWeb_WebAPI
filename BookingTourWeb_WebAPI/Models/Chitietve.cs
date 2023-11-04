@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace BookingTourWeb_WebAPI.Models;
+namespace BookingBackend.Models;
 
 public partial class Chitietve
 {
