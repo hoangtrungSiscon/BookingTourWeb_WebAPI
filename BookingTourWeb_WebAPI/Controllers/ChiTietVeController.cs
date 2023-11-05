@@ -28,12 +28,12 @@ namespace BookingTourWeb_WebAPI.Controllers
             }).ToList();
             var chiTietVes = _context.Chitietves.ToList().Join(ves, x => x.MaVe, ve => ve.MaVe, (x, ve) => new
             {
+                MaCTV = x.MaCTV,
                 MaVe = x.MaVe,
                 NgayDatVe = ve.NgayDatVe,
                 MaKh = ve.MaKh,
                 TenKhachHang = ve.TenKhachHang,
                 MaChuyenBay = x.MaChuyenBay,
-                TinhTrang = x.TinhTrang,
                 LoaiVe = x.LoaiVe,
                 SoLuong = x.SoLuong,
                 TinhTrang = x.TinhTrang,
@@ -57,12 +57,12 @@ namespace BookingTourWeb_WebAPI.Controllers
             }).ToList();
             var chiTietVes = filterChiTietVes.Join(ves, x => x.MaVe, ve => ve.MaVe, (x, ve) => new
             {
+                MaCTV = x.MaCTV,
                 MaVe = x.MaVe,
                 NgayDatVe = ve.NgayDatVe,
                 MaKh = ve.MaKh,
                 TenKhachHang = ve.TenKhachHang,
                 MaChuyenBay = x.MaChuyenBay,
-                TinhTrang = x.TinhTrang,
                 LoaiVe = x.LoaiVe,
                 SoLuong = x.SoLuong,
                 TinhTrang=x.TinhTrang,
@@ -73,14 +73,14 @@ namespace BookingTourWeb_WebAPI.Controllers
         }
 
         [HttpDelete]
-        public async Task<ActionResult> DeleteAsync(long inputMaVe)
+        public async Task<ActionResult> DeleteAsync(long inputMaCTV)
         {
-            var chiTietVe = await _context.Chitietves.Where(x => x.MaVe == inputMaVe).FirstOrDefaultAsync();
-            if (chiTietVe == null)
+            var MachiTietVe = await _context.Chitietves.Where(x => x.MaCTV == inputMaCTV).FirstOrDefaultAsync();
+            if (MachiTietVe == null)
             {
-                return NotFound(chiTietVe);
+                return NotFound(MachiTietVe);
             }
-            _context.Chitietves.Remove(chiTietVe);
+            _context.Chitietves.Remove(MachiTietVe);
             await _context.SaveChangesAsync();
             return Ok();
         }

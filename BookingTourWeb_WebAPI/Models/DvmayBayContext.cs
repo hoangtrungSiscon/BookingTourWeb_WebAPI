@@ -36,9 +36,8 @@ public partial class DvmayBayContext : DbContext
     {
         modelBuilder.Entity<Chitietve>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("CHITIETVE");
+            entity.HasKey(c => c.MaCTV);
+            entity.ToTable("CHITIETVE");
 
             entity.Property(e => e.LoaiVe)
                 .HasMaxLength(5)
@@ -49,15 +48,15 @@ public partial class DvmayBayContext : DbContext
                 .HasDefaultValueSql("(N'Đang xác nhận')");
             entity.Property(e => e.TongGia).HasColumnType("decimal(16, 4)");
 
-            entity.HasOne(d => d.MaChuyenBayNavigation).WithMany()
-                .HasForeignKey(d => d.MaChuyenBay)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_CHITIETVE_CHUYENBAY");
+            //entity.HasOne(d => d.MaChuyenBayNavigation).WithMany()
+            //    .HasForeignKey(d => d.MaChuyenBay)
+            //    .OnDelete(DeleteBehavior.ClientSetNull)
+            //    .HasConstraintName("FK_CHITIETVE_CHUYENBAY");
 
-            entity.HasOne(d => d.MaVeNavigation).WithMany()
-                .HasForeignKey(d => d.MaVe)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_CHITIETVE_VE");
+            //entity.HasOne(d => d.MaVeNavigation).WithMany()
+            //    .HasForeignKey(d => d.MaVe)
+            //    .OnDelete(DeleteBehavior.ClientSetNull)
+            //    .HasConstraintName("FK_CHITIETVE_VE");
         });
 
         modelBuilder.Entity<Chuyenbay>(entity =>
