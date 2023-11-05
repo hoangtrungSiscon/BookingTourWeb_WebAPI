@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using BookingTourWeb_WebAPI.ViewModels;
 using TourBookingWeb_API.ViewModels;
+using BookingTourWeb_WebAPI.Models;
 
 namespace TourBookingWeb_API.Controllers
 {
@@ -17,6 +18,7 @@ namespace TourBookingWeb_API.Controllers
         }
 
         [HttpGet]
+        /*
         public async Task<ActionResult<IEnumerable<ThongTinKhachHang>>> GetThongTinKhachHang()
         {
             //return await _context.ThongTinKhachHang.ToListAsync();
@@ -41,8 +43,26 @@ namespace TourBookingWeb_API.Controllers
             //return Ok(ThongTinKhachHang);
             return await ThongTinKhachHang;
         }
+        */
         //===========================================================================
-
+        public async Task<ActionResult<IEnumerable<ThongTinKhachHang>>> GetThongTinKhachHang()
+        {
+            //return await _context.ThongTinKhachHang.ToListAsync();
+            var ThongTinKhachHang = (from khachhang in _context.Khachhangs
+                                     select new ThongTinKhachHang()
+                                     {
+                                         Makhachhang = khachhang.MaKh,
+                                         HoTenKh = khachhang.TenKh,
+                                         MaTaiKhoan = khachhang.MaTaiKhoan,
+                                         GmailKh = khachhang.GmailKh,
+                                         Sdt = khachhang.Sdt,
+                                         Phai = khachhang.Phai
+                                     })
+            .ToListAsync();
+            //return Ok(ThongTinKhachHang);
+            return await ThongTinKhachHang;
+        }
+        /*
         [HttpGet("{makhachhang}")]
         public async Task<ActionResult<IEnumerable<ThongTinKhachHang>>> GetThongTinKhachHangByMakhachhang(long makhachhang)
         {
@@ -72,8 +92,31 @@ namespace TourBookingWeb_API.Controllers
 
             return ThongTinKhachHang;
         }
+        */
+        [HttpGet("{makhachhang}")]
+        public async Task<ActionResult<IEnumerable<ThongTinKhachHang>>> GetThongTinKhachHangByMakhachhang(long makhachhang)
+        {
+            var ThongTinKhachHang = await (from khachhang in _context.Khachhangs
 
+                                           where khachhang.MaKh.Equals(makhachhang)
+                                           select new ThongTinKhachHang()
+                                           {
+                                               Makhachhang = khachhang.MaKh,
+                                               HoTenKh = khachhang.TenKh,
+                                               MaTaiKhoan = khachhang.MaTaiKhoan,
+                                               GmailKh = khachhang.GmailKh,
+                                               Sdt = khachhang.Sdt,
+                                               Phai = khachhang.Phai
+                                           })
+            .ToListAsync();
 
+            if (ThongTinKhachHang == null)
+            {
+                return NotFound("ThongTinKhachHang not found.");
+            }
+
+            return ThongTinKhachHang;
+        }
         //===========================================================================
 
         [HttpPost]
@@ -91,8 +134,8 @@ namespace TourBookingWeb_API.Controllers
                 TenKh = ThongTinKhachHang.HoTenKh,
                 Phai = ThongTinKhachHang.Phai,
                 GmailKh = ThongTinKhachHang.GmailKh,
-                MaTaiKhoan=ThongTinKhachHang.Makhachhang,
-                Sdt=ThongTinKhachHang.Sdt,
+                MaTaiKhoan = ThongTinKhachHang.Makhachhang,
+                Sdt = ThongTinKhachHang.Sdt,
             };
 
             _context.Khachhangs.Add(khachhang);
