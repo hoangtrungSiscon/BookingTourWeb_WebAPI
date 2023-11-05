@@ -17,7 +17,7 @@ public partial class Chitietve
 
     public decimal TongGia { get; set; }
 
-    public virtual Chuyenbay MaChuyenBayNavigation { get; set; } = null!;
+    public virtual Chuyenbay? MaChuyenBayNavigation { get; set; } = null!;
 
-    public virtual Ve MaVeNavigation { get; set; } = null!;
+    public virtual Ve? MaVeNavigation { get; set; } = null!;
 }

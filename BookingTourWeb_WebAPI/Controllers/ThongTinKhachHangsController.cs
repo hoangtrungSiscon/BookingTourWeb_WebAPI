@@ -1,7 +1,7 @@
-﻿using TourBookingWeb_API.ViewModels;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BookingTourWeb_WebAPI.ViewModels;
+using TourBookingWeb_API.ViewModels;
 
 namespace TourBookingWeb_API.Controllers
 {

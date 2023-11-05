@@ -1,4 +1,4 @@
-﻿using BookingBackend.Models.InputModels;
+﻿using BookingTourWeb_WebAPI.Models.InputModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

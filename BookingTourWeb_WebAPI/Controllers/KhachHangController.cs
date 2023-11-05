@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Globalization;
 using System.Numerics;
 
-namespace TourBookingWeb_API.Controllers
+namespace BookingTourWeb_WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
