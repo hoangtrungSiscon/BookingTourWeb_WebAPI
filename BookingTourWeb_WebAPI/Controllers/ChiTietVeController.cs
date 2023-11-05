@@ -33,6 +33,7 @@ namespace BookingTourWeb_WebAPI.Controllers
                 MaKh = ve.MaKh,
                 TenKhachHang = ve.TenKhachHang,
                 MaChuyenBay = x.MaChuyenBay,
+                TinhTrang = x.TinhTrang,
                 LoaiVe = x.LoaiVe,
                 SoLuong = x.SoLuong,
                 TongGia = x.TongGia,
