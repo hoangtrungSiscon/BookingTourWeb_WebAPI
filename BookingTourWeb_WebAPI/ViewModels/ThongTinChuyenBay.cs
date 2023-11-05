@@ -15,18 +15,18 @@ namespace BookingTourWeb_WebAPI.ViewModels
         [AllowNull]
         public string TenMayBay { get; set; } = System.String.Empty;
 
-        public TimeSpan GioBay { get; set; }
-
         public string NoiXuatPhat { get; set; } = null!;
 
         public string NoiDen { get; set; } = null!;
 
         public DateTime NgayXuatPhat { get; set; }
 
-        public decimal DonGia { get; set; }
+        public TimeSpan GioBay { get; set; }
 
         public int SoLuongVeBsn { get; set; }
 
         public int SoLuongVeEco { get; set; }
+
+        public decimal DonGia { get; set; }
     }
 }

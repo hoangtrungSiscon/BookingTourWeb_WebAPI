@@ -45,6 +45,31 @@ namespace BookingTourWeb_WebAPI.Controllers
             //return Ok(thongtinchuyenbay);
             return await thongtinchuyenbay;
         }
+
+        //[HttpGet]
+        //public ActionResult<IEnumerable<ThongTinChuyenBay>> GetThongTinChuyenBay()
+        //{
+        //    var thongtinchuyenbay = (from chuyenbay in _context.Chuyenbays
+        //                             join maybay in _context.Maybays
+        //                             on chuyenbay.MaMayBay equals maybay.MaMayBay
+        //                             select new ThongTinChuyenBay()
+        //                             {
+        //                                 MaChuyenBay = chuyenbay.MaChuyenBay,
+        //                                 MaMayBay = chuyenbay.MaMayBay,
+        //                                 TenMayBay = maybay.TenMayBay,
+        //                                 NoiXuatPhat = chuyenbay.NoiXuatPhat,
+        //                                 NoiDen = chuyenbay.NoiDen,
+        //                                 NgayXuatPhat = chuyenbay.NgayXuatPhat,
+        //                                 GioBay = chuyenbay.GioBay,
+        //                                 SoLuongVeBsn = chuyenbay.SoLuongVeBsn,
+        //                                 SoLuongVeEco = chuyenbay.SoLuongVeEco,
+        //                                 DonGia = chuyenbay.DonGia,
+        //                             })
+        //        .ToList();
+
+        //    return thongtinchuyenbay;
+        //}
+
         //===========================================================================
 
         [HttpGet("{maChuyenBay}")]
