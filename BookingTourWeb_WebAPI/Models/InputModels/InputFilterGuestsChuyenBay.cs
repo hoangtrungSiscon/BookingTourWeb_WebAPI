@@ -1,4 +1,4 @@
-﻿namespace BookingBackend.Models.InputModels
+﻿namespace BookingTourWeb_WebAPI.Models.InputModels
 {
     public class InputFilterGuestsChuyenBay
     {
