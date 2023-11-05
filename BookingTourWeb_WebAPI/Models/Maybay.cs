@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace BookingTourWeb_WebAPI.Models;
+namespace BookingBackend.Models;
 
 public partial class Maybay
 {
@@ -13,5 +13,5 @@ public partial class Maybay
 
     public int SlgheEco { get; set; }
 
-    //public virtual ICollection<Chuyenbay> Chuyenbays { get; set; } = new List<Chuyenbay>();
+    public virtual ICollection<Chuyenbay> Chuyenbays { get; set; } = new List<Chuyenbay>();
 }

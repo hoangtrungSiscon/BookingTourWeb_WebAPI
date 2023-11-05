@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace BookingTourWeb_WebAPI.Models;
+namespace BookingBackend.Models;
 
 public partial class Taikhoan
 {
@@ -9,7 +9,7 @@ public partial class Taikhoan
 
     public int VaiTro { get; set; }
 
-    public string TaiKhoan1 { get; set; } = null!;
+    public string TenTaiKhoan { get; set; } = null!;
 
     public string MatKhau { get; set; } = null!;
 

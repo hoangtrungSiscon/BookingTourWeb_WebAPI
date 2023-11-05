@@ -4,12 +4,12 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:2147",
-      "sslPort": 44301
+      "applicationUrl": "http://localhost:16221",
+      "sslPort": 44369
     }
   },
   "profiles": {
-    "BookingTourWeb_WebAPI": {
+    "http": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
