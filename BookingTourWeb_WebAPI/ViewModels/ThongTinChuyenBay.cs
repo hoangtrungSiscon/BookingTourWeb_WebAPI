@@ -25,8 +25,8 @@ namespace BookingTourWeb_WebAPI.ViewModels
 
         public decimal DonGia { get; set; }
 
-        public int SoLuongVeBsn { get; set; }
+        public int SoLuongVeBsn { get; set; } = 0;
 
-        public int SoLuongVeEco { get; set; }
+        public int SoLuongVeEco { get; set; } = 0;
     }
 }

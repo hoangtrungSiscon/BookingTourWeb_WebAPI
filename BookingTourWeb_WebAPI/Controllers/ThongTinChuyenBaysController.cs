@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BookingTourWeb_WebAPI.Controllers;
+using Microsoft.CodeAnalysis.CSharp;
 
 namespace BookingTourWeb_WebAPI.Controllers
 {
@@ -25,7 +26,7 @@ namespace BookingTourWeb_WebAPI.Controllers
         public async Task<ActionResult<IEnumerable<ThongTinChuyenBay>>> GetThongTinChuyenBay()
         {
             //return await _context.ThongTinChuyenBay.ToListAsync();
-            var thongtinchuyenbay = (from chuyenbay in _context.Chuyenbays
+            var thongtinchuyenbay = await (from chuyenbay in _context.Chuyenbays
                                      join maybay in _context.Maybays
                                      on chuyenbay.MaMayBay equals maybay.MaMayBay
                                      select new ThongTinChuyenBay()
@@ -37,13 +38,24 @@ namespace BookingTourWeb_WebAPI.Controllers
                                          NoiDen = chuyenbay.NoiDen,
                                          NgayXuatPhat = chuyenbay.NgayXuatPhat,
                                          GioBay = chuyenbay.GioBay,
-                                         SoLuongVeBsn = chuyenbay.SoLuongVeBsn,
-                                         SoLuongVeEco = chuyenbay.SoLuongVeEco,
+                                         //SoLuongVeBsn = chuyenbay.SoLuongVeBsn,
+                                         //SoLuongVeEco = chuyenbay.SoLuongVeEco,
                                          DonGia = chuyenbay.DonGia,
                                      })
             .ToListAsync();
+            foreach (var item in thongtinchuyenbay)
+            {
+                item.SoLuongVeBsn = await _context.Chitietves
+                    .Where(ctv => ctv.MaChuyenBay == item.MaChuyenBay && ctv.LoaiVe == "BSN")
+                    .SumAsync(ctv => ctv.SoLuong);
+
+                item.SoLuongVeEco = await _context.Chitietves
+                    .Where(ctv => ctv.MaChuyenBay == item.MaChuyenBay && ctv.LoaiVe == "ECO")
+                    .SumAsync(ctv => ctv.SoLuong);
+            }
+
             //return Ok(thongtinchuyenbay);
-            return await thongtinchuyenbay;
+            return thongtinchuyenbay;
         }
         //===========================================================================
 
