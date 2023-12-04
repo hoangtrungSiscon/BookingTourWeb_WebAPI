@@ -56,8 +56,8 @@ namespace BookingTourWeb_WebAPI.Controllers
             tk.MatKhau = "123456";
             this._context.Update(tk);
             await this._context.SaveChangesAsync();
-            var mail = "ximvhs26092002@gmail.com";
-            var pass = "niuiehecquymxqdr";
+            var mail = "apitester195@gmail.com";
+            var pass = "APItester@123";
             var message = new MailMessage();
             message.From = new MailAddress(mail);
             message.To.Add(new MailAddress(request.email));
