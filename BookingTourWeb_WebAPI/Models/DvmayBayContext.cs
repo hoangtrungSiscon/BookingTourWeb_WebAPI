@@ -75,11 +75,11 @@ public partial class DvmayBayContext : DbContext
             entity.Property(e => e.SoLuongVeBsn).HasColumnName("SoLuongVeBSN");
             entity.Property(e => e.SoLuongVeEco).HasColumnName("SoLuongVeECO");
 
-            //entity.HasOne(d => d.MaMayBayNavigation).WithMany(p => p.Chuyenbays)
-            //    .HasForeignKey(d => d.MaMayBay)
-            //    .OnDelete(DeleteBehavior.ClientSetNull)
-            //    .HasConstraintName("FK_CHUYENBAY_MAYBAY")
-            //    .IsRequired(false);
+            entity.HasOne(d => d.MaMayBayNavigation).WithMany(p => p.Chuyenbays)
+                .HasForeignKey(d => d.MaMayBay)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_CHUYENBAY_MAYBAY")
+                .IsRequired(false);
         });
 
         modelBuilder.Entity<Khachhang>(entity =>

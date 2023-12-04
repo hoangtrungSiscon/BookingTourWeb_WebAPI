@@ -28,8 +28,8 @@ namespace BookingTourWeb_WebAPI.Controllers
         {
             var checkEmail = await _context.Khachhangs.Where(x => x.GmailKh == request.email).FirstOrDefaultAsync();
             if (checkEmail == null) { return Ok(false); }
-            var mail = "apitester195@gmail.com";
-            var pass = "zoak guij pmbh jygb";
+            var mail = "flightdotservice@gmail.com";
+            var pass = "klqg vnlz udob ugkm";
             var message = new MailMessage();
             message.From = new MailAddress(mail);
             message.To.Add(new MailAddress(request.email));
@@ -56,8 +56,8 @@ namespace BookingTourWeb_WebAPI.Controllers
             tk.MatKhau = "123456";
             this._context.Update(tk);
             await this._context.SaveChangesAsync();
-            var mail = "apitester195@gmail.com";
-            var pass = "zoak guij pmbh jygb";
+            var mail = "flightdotservice@gmail.com";
+            var pass = "klqg vnlz udob ugkm";
             var message = new MailMessage();
             message.From = new MailAddress(mail);
             message.To.Add(new MailAddress(request.email));
