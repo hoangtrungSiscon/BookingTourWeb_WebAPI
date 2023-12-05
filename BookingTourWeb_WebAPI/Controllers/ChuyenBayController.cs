@@ -25,8 +25,27 @@ namespace BookingTourWeb_WebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<List<Chuyenbay>>> FilterChuyenBayAsync(InputFilterChuyenBay input)
         {
-            var result = await _context.Chuyenbays.Where(x => x.NoiXuatPhat == input.fromPlace && x.NoiDen == input.toPlace && x.NgayXuatPhat >= DateTime.Parse(input.startDate)).ToListAsync();
-            return Ok(result);
+            var data = _context.Chuyenbays.AsQueryable();
+            if (input == null)
+            {
+                return await _context.Chuyenbays.ToListAsync();
+            }
+            if (!string.IsNullOrEmpty(input.fromPlace))
+            {
+                data = data.Where(f => f.NoiXuatPhat == input.fromPlace);
+            }
+            if (!string.IsNullOrEmpty(input.toPlace))
+            {
+                data = data.Where(f => f.NoiDen == input.toPlace);
+            }
+            if (!string.IsNullOrEmpty(input.startDate))
+            {
+                data = data.Where(f => f.NgayXuatPhat >= (DateTime.Parse(input.startDate)));
+            }
+
+            return Ok(await data.ToListAsync());
+            //var result = await _context.Chuyenbays.Where(x => x.NoiXuatPhat == input.fromPlace && x.NoiDen == input.toPlace && x.NgayXuatPhat >= DateTime.Parse(input.startDate)).ToListAsync();
+            //return Ok(result);
         }
         [HttpGet]
         public async Task<ActionResult<object>> GetByCodeAsync(string code)

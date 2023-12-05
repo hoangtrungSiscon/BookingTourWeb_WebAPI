@@ -45,6 +45,7 @@ namespace BookingTourWeb_WebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<List<object>>> FilterChiTietVeAsync(InputFilterGuestsChuyenBay input)
         {
+
             var filterVe = await _context.Ves.Where(x => x.NgayDatVe >= DateTime.Parse(input.bookDate)).ToListAsync();
             var filterChiTietVes = await _context.Chitietves.Where(x => filterVe.Select(x => x.MaVe).Contains(x.MaVe)).ToListAsync();
             var chuyenBays = await _context.Chuyenbays.Where(x => x.NgayXuatPhat == DateTime.Parse(input.startDate) && x.NoiXuatPhat == input.fromPlace && x.NoiDen == input.toPlace).ToListAsync();
