@@ -14,7 +14,7 @@ namespace TourBookingWeb_API.ViewModels
         public string Sdt { get; set; } = null!;
         public string GmailKh { get; set; } = null!;
 
-
+        public string TenTaiKhoan { get; set; } = null!;
 
         public string MaChuyenBay { get; set; } = null!;
 
