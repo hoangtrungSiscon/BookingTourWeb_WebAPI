@@ -6,13 +6,41 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Globalization;
 using System.Numerics;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookingTourWeb_WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class KhachHangsController : ControllerBase
-    {/*
+    {
+        private readonly DvmayBayContext _context;
+
+        public KhachHangsController(DvmayBayContext context)
+        {
+            _context = context;
+        }
+
+        [HttpGet]
+
+        public async Task<ActionResult<IEnumerable<ThongTinKhachHang>>> GetThongTinKhachHang()
+        {
+            //return await _context.ThongTinKhachHang.ToListAsync();
+            var ThongTinKhachHang = (from khachhang in _context.Khachhangs
+                                     select new ThongTinKhachHang()
+                                     {
+                                         Makhachhang = khachhang.MaKh,
+                                         MaTaiKhoan = khachhang.MaKh,
+                                         HoTenKh = khachhang.TenKh,
+                                         Phai = khachhang.Phai,
+                                         GmailKh = khachhang.GmailKh,
+                                         Sdt = khachhang.Sdt
+                                     })
+            .ToListAsync();
+            //return Ok(ThongTinKhachHang);
+            return await ThongTinKhachHang;
+        }
+        /*
         private readonly DVMayBayContext _context;
         public KhachHangsController(DVMayBayContext context)
         {
