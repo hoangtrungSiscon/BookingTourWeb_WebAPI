@@ -2,7 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
-namespace TourBookingWeb_API.ViewModels
+namespace BookingTourWeb_WebAPI.ViewModels
 {
     public class ThongTinKhachHang
     {
