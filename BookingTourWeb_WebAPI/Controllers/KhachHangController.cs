@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using BookingTourWeb_WebAPI.Models.InputModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 using System.Globalization;
 using System.Numerics;
-using Microsoft.EntityFrameworkCore;
+
 
 namespace BookingTourWeb_WebAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class KhachHangsController : ControllerBase
     {
@@ -39,12 +38,6 @@ namespace BookingTourWeb_WebAPI.Controllers
             .ToListAsync();
             //return Ok(ThongTinKhachHang);
             return await ThongTinKhachHang;
-        }
-        /*
-        private readonly DVMayBayContext _context;
-        public KhachHangsController(DVMayBayContext context)
-        {
-            _context = context;
         }
 
         [HttpGet]
@@ -76,6 +69,8 @@ namespace BookingTourWeb_WebAPI.Controllers
         }
 
         
+
+
         [HttpPut("{id}")]
         public async Task<IActionResult> PutKhachHang(long id, Khachhang khachhang)
         {
@@ -105,7 +100,6 @@ namespace BookingTourWeb_WebAPI.Controllers
             return NoContent();
         }
 
-        // POST: api/Khachhangs
         [HttpPost]
         public async Task<ActionResult<Khachhang>> PostKhachhang(Khachhang khachhang)
         {
@@ -156,6 +150,22 @@ namespace BookingTourWeb_WebAPI.Controllers
         {
             return (_context.Khachhangs?.Any(e => e.MaKh == id)).GetValueOrDefault();
         }
-        */
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Khachhang>> GetByMaTaiKhoanAsync(long id)
+        {
+            if (_context.Khachhangs == null)
+            {
+                return NotFound();
+            }
+            var khachhang = await _context.Khachhangs.Where(x => x.MaTaiKhoan == id).FirstOrDefaultAsync();
+
+            if (khachhang == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(khachhang);
+        }
     }
 }

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BookingTourWeb_WebAPI.Controllers;
+using Microsoft.CodeAnalysis.CSharp;
 
 namespace BookingTourWeb_WebAPI.Controllers
 {
@@ -22,28 +23,54 @@ namespace BookingTourWeb_WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ThongTinChuyenBay>>> GetThongTinChuyenBay()
+        public async Task<ActionResult<IEnumerable<ThongTinChuyenBay>>> GetThongTinChuyenBay(string? MaChuyenBay, string? NoiXuatPhat, string? NoiDen, string? NgayXuatPhat)
         {
-            //return await _context.ThongTinChuyenBay.ToListAsync();
-            var thongtinchuyenbay = (from chuyenbay in _context.Chuyenbays
-                                     join maybay in _context.Maybays
-                                     on chuyenbay.MaMayBay equals maybay.MaMayBay
-                                     select new ThongTinChuyenBay()
-                                     {
-                                         MaChuyenBay = chuyenbay.MaChuyenBay,
-                                         MaMayBay = chuyenbay.MaMayBay,
-                                         TenMayBay = maybay.TenMayBay,
-                                         NoiXuatPhat = chuyenbay.NoiXuatPhat,
-                                         NoiDen = chuyenbay.NoiDen,
-                                         NgayXuatPhat = chuyenbay.NgayXuatPhat,
-                                         GioBay = chuyenbay.GioBay,
-                                         SoLuongVeBsn = chuyenbay.SoLuongVeBsn,
-                                         SoLuongVeEco = chuyenbay.SoLuongVeEco,
-                                         DonGia = chuyenbay.DonGia,
-                                     })
-            .ToListAsync();
+            var query = _context.Chuyenbays.Include(f => f.MaMayBayNavigation).AsQueryable();
+
+            if (MaChuyenBay != "" && !string.IsNullOrEmpty(MaChuyenBay))
+            {
+                query = query.Where(f => f.MaChuyenBay.Contains(MaChuyenBay));
+            }
+            if (NoiXuatPhat != "" && !string.IsNullOrEmpty(NoiXuatPhat))
+            {
+                query = query.Where(f => f.NoiXuatPhat == NoiXuatPhat);
+            }
+            if (NoiDen != "" && !string.IsNullOrEmpty(NoiDen))
+            {
+                query = query.Where(f => f.NoiDen == NoiDen);
+            }
+            if (NgayXuatPhat != "" && !string.IsNullOrEmpty(NgayXuatPhat))
+            {
+                query = query.Where(f => (f.NgayXuatPhat.Year + "-" + f.NgayXuatPhat.Month + "-" + f.NgayXuatPhat.Day) == NgayXuatPhat);
+            }
+
+            var thongtinchuyenbay = await query.Select(f => new ThongTinChuyenBay
+            {
+                MaChuyenBay = f.MaChuyenBay,
+                MaMayBay = f.MaMayBay,
+                TenMayBay = f.MaMayBayNavigation.TenMayBay,
+                NoiXuatPhat = f.NoiXuatPhat,
+                NoiDen = f.NoiDen,
+                NgayXuatPhat = f.NgayXuatPhat,
+                GioBay = f.GioBay,
+                DonGia = f.DonGia
+            }).ToListAsync();
+            foreach (var item in thongtinchuyenbay)
+            {
+                item.SoLuongVeBsn = await _context.Chitietves
+                    .Where(ctv => ctv.MaChuyenBay == item.MaChuyenBay && ctv.LoaiVe == "BSN")
+                    .SumAsync(ctv => ctv.SoLuong);
+
+                item.SoLuongVeEco = await _context.Chitietves
+                    .Where(ctv => ctv.MaChuyenBay == item.MaChuyenBay && ctv.LoaiVe == "ECO")
+                    .SumAsync(ctv => ctv.SoLuong);
+            }
+            if (thongtinchuyenbay == null)
+            {
+                return NotFound("ThongTinChuyenBay not found.");
+            }
             //return Ok(thongtinchuyenbay);
-            return await thongtinchuyenbay;
+            return thongtinchuyenbay;
         }
         //-----------------------
         /*[HttpGet("mostBookedFlightCode")]
@@ -94,7 +121,16 @@ namespace BookingTourWeb_WebAPI.Controllers
                                                DonGia = chuyenbay.DonGia,
                                            })
             .ToListAsync();
+            foreach (var item in thongtinchuyenbay)
+            {
+                item.SoLuongVeBsn = await _context.Chitietves
+                    .Where(ctv => ctv.MaChuyenBay == item.MaChuyenBay && ctv.LoaiVe == "BSN")
+                    .SumAsync(ctv => ctv.SoLuong);
 
+                item.SoLuongVeEco = await _context.Chitietves
+                    .Where(ctv => ctv.MaChuyenBay == item.MaChuyenBay && ctv.LoaiVe == "ECO")
+                    .SumAsync(ctv => ctv.SoLuong);
+            }
             if (thongtinchuyenbay == null)
             {
                 return NotFound("ThongTinChuyenBay not found.");
