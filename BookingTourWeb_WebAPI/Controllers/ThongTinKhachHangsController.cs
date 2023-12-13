@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BookingTourWeb_WebAPI.ViewModels;
-using TourBookingWeb_API.ViewModels;
 using BookingTourWeb_WebAPI.Models;
 
 namespace TourBookingWeb_API.Controllers
@@ -18,7 +17,7 @@ namespace TourBookingWeb_API.Controllers
         }
 
         [HttpGet]
-        /*
+
         public async Task<ActionResult<IEnumerable<ThongTinKhachHang>>> GetThongTinKhachHang()
         {
             //return await _context.ThongTinKhachHang.ToListAsync();
@@ -35,17 +34,17 @@ namespace TourBookingWeb_API.Controllers
                                          HoTenKh = khachhang.TenKh,
                                          Phai = khachhang.Phai,
                                          GmailKh = khachhang.GmailKh,
-                                         MaChuyenBay=Chitietve.MaChuyenBay,
-                                         MaVe=Ve.MaVe,
-                                         Sdt=khachhang.Sdt
+                                         MaChuyenBay = Chitietve.MaChuyenBay,
+                                         MaVe = Ve.MaVe,
+                                         Sdt = khachhang.Sdt
                                      })
             .ToListAsync();
             //return Ok(ThongTinKhachHang);
             return await ThongTinKhachHang;
         }
-        */
+        
         //===========================================================================
-        public async Task<ActionResult<IEnumerable<ThongTinKhachHang>>> GetThongTinKhachHang()
+        /*public async Task<ActionResult<IEnumerable<ThongTinKhachHang>>> GetThongTinKhachHang()
         {
             //return await _context.ThongTinKhachHang.ToListAsync();
             var ThongTinKhachHang = (from khachhang in _context.Khachhangs
@@ -61,7 +60,7 @@ namespace TourBookingWeb_API.Controllers
             .ToListAsync();
             //return Ok(ThongTinKhachHang);
             return await ThongTinKhachHang;
-        }
+        }*/
         /*
         [HttpGet("{makhachhang}")]
         public async Task<ActionResult<IEnumerable<ThongTinKhachHang>>> GetThongTinKhachHangByMakhachhang(long makhachhang)

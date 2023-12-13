@@ -72,6 +72,33 @@ namespace BookingTourWeb_WebAPI.Controllers
             //return Ok(thongtinchuyenbay);
             return thongtinchuyenbay;
         }
+        //-----------------------
+        /*[HttpGet("mostBookedFlightCode")]
+        public async Task<ActionResult<string>> GetMostBookedFlightCode()
+        {
+            try
+            {
+                var mostBookedFlightCode = await _context.Chuyenbays
+                    .GroupBy(chuyenbay => new { TruncatedMaChuyenBay = chuyenbay.MaChuyenBay.Substring(6) })
+                    .OrderByDescending(group => group.Count())
+                    .Select(group => group.Key.TruncatedMaChuyenBay)
+                    .FirstOrDefaultAsync();
+
+                if (mostBookedFlightCode == null)
+                {
+                    return NotFound("No bookings found.");
+                }
+
+                return mostBookedFlightCode;
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+*/
+
+        //===========================================================================
 
         [HttpGet("{maChuyenBay}")]
         public async Task<ActionResult<IEnumerable<ThongTinChuyenBay>>> GetThongTinChuyenBayByMaChuyenBay(string maChuyenBay)
