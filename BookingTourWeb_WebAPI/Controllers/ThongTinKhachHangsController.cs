@@ -109,11 +109,11 @@ namespace TourBookingWeb_API.Controllers
         }
         */
         [HttpGet("{makhachhang}")]
-        public async Task<ActionResult<IEnumerable<ThongTinKhachHang>>> GetThongTinKhachHangByMakhachhang(long makhachhang)
+        public async Task<ActionResult<Object>> GetThongTinKhachHangByMakhachhang(long makhachhang)
         {
             var ThongTinKhachHang = await (from khachhang in _context.Khachhangs
 
-                                           where khachhang.MaKh.Equals(makhachhang)
+                                           where khachhang.MaTaiKhoan.Equals(makhachhang)
                                            select new ThongTinKhachHang()
                                            {
                                                Makhachhang = khachhang.MaKh,
@@ -121,16 +121,27 @@ namespace TourBookingWeb_API.Controllers
                                                MaTaiKhoan = khachhang.MaTaiKhoan,
                                                GmailKh = khachhang.GmailKh,
                                                Sdt = khachhang.Sdt,
-                                               Phai = khachhang.Phai
+                                               Phai = khachhang.Phai,
+                                               TenTaiKhoan = khachhang.MaTaiKhoanNavigation.TaiKhoan1
                                            })
-            .ToListAsync();
+            .FirstOrDefaultAsync();
 
             if (ThongTinKhachHang == null)
             {
                 return NotFound("ThongTinKhachHang not found.");
             }
 
-            return ThongTinKhachHang;
+            var taiKhoan = _context.Taikhoans.Where(x => x.MaTaiKhoan == ThongTinKhachHang.MaTaiKhoan).FirstOrDefault();
+
+            dynamic result = new System.Dynamic.ExpandoObject();
+            result.Makhachhang = ThongTinKhachHang.Makhachhang;
+            result.HoTenKh = ThongTinKhachHang.HoTenKh;
+            result.GmailKh = ThongTinKhachHang.GmailKh;
+            result.Sdt = ThongTinKhachHang.Sdt;
+            result.Phai = ThongTinKhachHang.Phai;
+            result.TenTaiKhoan = ThongTinKhachHang.TenTaiKhoan;
+            result.MaTaiKhoan = ThongTinKhachHang.MaTaiKhoan;
+            return result;
         }
         //===========================================================================
 
@@ -179,6 +190,7 @@ namespace TourBookingWeb_API.Controllers
         //============================================================================
 
         [HttpPut("{makhachhang}")]
+        //[HttpPut("{makhachhang}/{mataikhoan}")]
         public async Task<IActionResult> PutThongTinKhachHang(long makhachhang, ThongTinKhachHang ThongTinKhachHang)
         {
             if (makhachhang != ThongTinKhachHang.Makhachhang)
@@ -187,20 +199,17 @@ namespace TourBookingWeb_API.Controllers
             }
 
             var khachhang = await _context.Khachhangs.FindAsync(makhachhang);
-
             if (khachhang == null)
             {
                 return NotFound("khachhang not found.");
             }
+            
 
             // Cập nhật thông tin khachhang
-            khachhang.MaKh = ThongTinKhachHang.Makhachhang;
             khachhang.TenKh = ThongTinKhachHang.HoTenKh;
             khachhang.Phai = ThongTinKhachHang.Phai;
             khachhang.GmailKh = ThongTinKhachHang.GmailKh;
             khachhang.Sdt = ThongTinKhachHang.Sdt;
-            khachhang.MaTaiKhoan = ThongTinKhachHang.MaTaiKhoan;
-
             _context.Entry(khachhang).State = EntityState.Modified;
 
             try

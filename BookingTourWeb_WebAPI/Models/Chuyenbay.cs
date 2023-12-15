@@ -26,5 +26,5 @@ public partial class Chuyenbay
     public int SoLuongVeEco { get; set; }
     //[JsonIgnore]
     //[AllowNull]
-    //public virtual Maybay MaMayBayNavigation { get; set; } = null!;
+    public virtual Maybay MaMayBayNavigation { get; set; } = null!;
 }
