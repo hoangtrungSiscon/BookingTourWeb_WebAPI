@@ -18,7 +18,7 @@ namespace TourBookingWeb_API.Controllers
 
         [HttpGet]
 
-        public async Task<ActionResult<IEnumerable<ThongTinKhachHang>>> GetThongTinKhachHang()
+        /*public async Task<ActionResult<IEnumerable<ThongTinKhachHang>>> GetThongTinKhachHang()
         {
             //return await _context.ThongTinKhachHang.ToListAsync();
             var ThongTinKhachHang = (from khachhang in _context.Khachhangs
@@ -41,8 +41,40 @@ namespace TourBookingWeb_API.Controllers
             .ToListAsync();
             //return Ok(ThongTinKhachHang);
             return await ThongTinKhachHang;
+        }*/
+        public async Task<ActionResult<IEnumerable<ThongTinKhachHang>>> GetThongTinKhachHang()
+        {
+            //return await _context.ThongTinKhachHang.ToListAsync();
+            var ThongTinKhachHang = (from khachhang in _context.Khachhangs
+                                     select new ThongTinKhachHang()
+                                     {
+                                         Makhachhang = khachhang.MaKh,
+                                         MaTaiKhoan = khachhang.MaKh,
+                                         HoTenKh = khachhang.TenKh,
+                                         Phai = khachhang.Phai,
+                                         GmailKh = khachhang.GmailKh,
+                                         Sdt = khachhang.Sdt
+                                     })
+            .ToListAsync();
+            //return Ok(ThongTinKhachHang);
+            return await ThongTinKhachHang;
         }
-        
+        /*[HttpGet("{id}")]
+        public async Task<ActionResult<Khachhang>> GetKhachHangByMaKhachHang(long id)
+        {
+            if (_context.Khachhangs == null)
+            {
+                return NotFound();
+            }
+            var khachhang = await _context.Khachhangs.FindAsync(id);
+
+            if (khachhang == null)
+            {
+                return NotFound();
+            }
+
+            return khachhang;
+        }*/
         //===========================================================================
         /*public async Task<ActionResult<IEnumerable<ThongTinKhachHang>>> GetThongTinKhachHang()
         {
@@ -61,26 +93,25 @@ namespace TourBookingWeb_API.Controllers
             //return Ok(ThongTinKhachHang);
             return await ThongTinKhachHang;
         }*/
-        /*
+
         [HttpGet("{makhachhang}")]
         public async Task<ActionResult<IEnumerable<ThongTinKhachHang>>> GetThongTinKhachHangByMakhachhang(long makhachhang)
         {
             var ThongTinKhachHang = await (from khachhang in _context.Khachhangs
-                                           join Ve in _context.Ves
-                                           on khachhang.MaKh equals Ve.MaKh
-                                           join Chitietve in _context.Chitietves
-                                           on Ve.MaVe equals Chitietve.MaVe
-                                           join chuyenbay in _context.Chuyenbays
-                                           on Chitietve.MaChuyenBay equals chuyenbay.MaChuyenBay
+                                           join Taikhoan in _context.Taikhoans
+                                           on khachhang.MaTaiKhoan equals Taikhoan.MaTaiKhoan
                                            where khachhang.MaKh.Equals(makhachhang)
                                            select new ThongTinKhachHang()
                                            {
-                                               Makhachhang = khachhang.MaKh,
+                                               Makhachhang=khachhang.MaKh,
+                                               MaTaiKhoan = khachhang.MaTaiKhoan,
+                                               TenTaiKhoan=Taikhoan.TaiKhoan1,
+                                               MatKhau=Taikhoan.MatKhau,
                                                HoTenKh = khachhang.TenKh,
-                                               Phai = khachhang.Phai,
+                                               Sdt=khachhang.Sdt,
                                                GmailKh = khachhang.GmailKh,
-                                               MaChuyenBay = Chitietve.MaChuyenBay,
-                                               MaVe = Ve.MaVe,
+                                               Phai = khachhang.Phai,
+
                                            })
             .ToListAsync();
 
@@ -91,8 +122,8 @@ namespace TourBookingWeb_API.Controllers
 
             return ThongTinKhachHang;
         }
-        */
-        [HttpGet("{makhachhang}")]
+
+        /*[HttpGet("{makhachhang}")]
         public async Task<ActionResult<Object>> GetThongTinKhachHangByMakhachhang(long makhachhang)
         {
             var ThongTinKhachHang = await (from khachhang in _context.Khachhangs
@@ -236,7 +267,7 @@ namespace TourBookingWeb_API.Controllers
 
             return NoContent();
         }
-
+        */
         private bool ThongTinKhachHangExists(long id)
         {
             return (_context.Khachhangs?.Any(e => e.MaKh == id)).GetValueOrDefault();
