@@ -1,4 +1,5 @@
 ﻿using BookingTourWeb_WebAPI.Models.InputModels;
+using BookingTourWeb_WebAPI.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -103,8 +104,8 @@ namespace BookingTourWeb_WebAPI.Controllers
             var newVe = new Ve() { MaVe = request.MaVe, MaKh= kh.MaKh, MaKhNavigation= kh, NgayDatVe= DateTime.Parse(request.NgayDatVe)};
             await _context.Ves.AddAsync(newVe);
             _context.SaveChanges();
-            var newCTV = new Chitietve() { MaCTV = 0, MaVe = newVe.MaVe, LoaiVe = request.LoaiVe, MaChuyenBay=request.MaChuyenBay, SoLuong = request.SoLuong, TinhTrang= request.TinhTrang, TongGia=request.TongGia };
-            await _context.Chitietves.AddAsync(newCTV);
+            var newCTV = new Chitietve() { MaCTV = 0, MaVe = newVe.MaVe, LoaiVe = request.LoaiVe, MaChuyenBay=request.MaChuyenBay, SoLuong = request.SoLuong, TinhTrang= "Đang xác nhận", TongGia=request.TongGia };
+            _context.Chitietves.Add(newCTV);
             var chuyenBay = await _context.Chuyenbays.Where(x => x.MaChuyenBay == request.MaChuyenBay).FirstOrDefaultAsync();
             if(request.LoaiVe == "BSN")
             {
@@ -116,7 +117,29 @@ namespace BookingTourWeb_WebAPI.Controllers
             }
             _context.Chuyenbays.Update(chuyenBay);
             _context.SaveChanges();
-            return Ok(newCTV);
+            //return Ok(newCTV);
+            //return CreatedAtAction("GetChiTietVe", new { id = newCTV.MaCTV }, newCTV);
+            return StatusCode(201);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<ThongTinChuyenBay>>> GetChiTietVe(long? MaCTV)
+        {
+            var query = _context.Chitietves
+                //.Include(f => f.MaChuyenBayNavigation)
+                .AsQueryable();
+            query = query.Where(f => f.MaCTV == MaCTV);
+
+            var chitietve = await query.Select(f => new
+            {
+                
+            }).FirstOrDefaultAsync();
+            if (chitietve == null)
+            {
+                return NotFound("ChiTietVe not found.");
+            }
+            //return Ok(thongtinchuyenbay);
+            return Ok(chitietve);
         }
     }
 }

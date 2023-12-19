@@ -5,6 +5,8 @@ global using BookingTourWeb_WebAPI.ViewModels;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +34,12 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.ResolveConflictingActions(apidescriptions => apidescriptions.First());
 });
+var options = new JsonSerializerOptions
+{
+    ReferenceHandler = ReferenceHandler.Preserve,
+    MaxDepth = 64
+
+};
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

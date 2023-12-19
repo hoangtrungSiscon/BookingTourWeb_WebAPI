@@ -1,4 +1,5 @@
-﻿using BookingTourWeb_WebAPI.Models.InputModels;
+﻿using BookingTourWeb_WebAPI.Models;
+using BookingTourWeb_WebAPI.Models.InputModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -50,16 +51,52 @@ namespace BookingTourWeb_WebAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<object>> GetByCodeAsync(string code)
         {
-            var chuyenBay = await _context.Chuyenbays.Where(x => x.MaChuyenBay == code).Join(_context.Maybays, x => x.MaMayBay, mayBay => mayBay.MaMayBay, (x, mayBay) => new
+            //var chuyenBay = await _context.Chuyenbays.Where(x => x.MaChuyenBay == code).Join(_context.Maybays, x => x.MaMayBay, mayBay => mayBay.MaMayBay, (x, mayBay) => new
+            //{
+            //    chuyenBay = x,
+            //    mayBay = mayBay
+            //}).FirstOrDefaultAsync();
+            //if (chuyenBay != null)
+            //{
+            //    return Ok(chuyenBay);
+            //}
+            //return NotFound();
+            var query = _context.Chuyenbays.Include(f => f.MaMayBayNavigation).AsQueryable();
+
+            query = query.Where(f => f.MaChuyenBay == code);
+
+            var thongtinchuyenbay = await query.Select(f => new
             {
-                chuyenBay = x,
-                mayBay = mayBay
+                mayBay = f.MaMayBayNavigation,
+                chuyenBay = new Chuyenbay
+                {
+                    MaChuyenBay = f.MaChuyenBay,
+                    MaMayBay = f.MaMayBay,
+                    NoiXuatPhat = f.NoiXuatPhat,
+                    NoiDen = f.NoiDen,
+                    NgayXuatPhat = f.NgayXuatPhat,
+                    SoLuongVeBsn = f.SoLuongVeBsn,
+                    SoLuongVeEco = f.SoLuongVeEco,
+                    GioBay = f.GioBay,
+                    DonGia = f.DonGia
+                }
             }).FirstOrDefaultAsync();
-            if (chuyenBay != null)
+            //foreach (var item in thongtinchuyenbay)
+            //{
+            //    item.SoLuongVeBsn = await _context.Chitietves
+            //        .Where(ctv => ctv.MaChuyenBay == item.MaChuyenBay && ctv.LoaiVe == "BSN")
+            //        .SumAsync(ctv => ctv.SoLuong);
+
+            //    item.SoLuongVeEco = await _context.Chitietves
+            //        .Where(ctv => ctv.MaChuyenBay == item.MaChuyenBay && ctv.LoaiVe == "ECO")
+            //        .SumAsync(ctv => ctv.SoLuong);
+            //}
+            if (thongtinchuyenbay == null)
             {
-                return Ok(chuyenBay);
+                return NotFound("ThongTinChuyenBay not found.");
             }
-            return NotFound();
+            //return Ok(thongtinchuyenbay);
+            return thongtinchuyenbay;
         }
 
     }
