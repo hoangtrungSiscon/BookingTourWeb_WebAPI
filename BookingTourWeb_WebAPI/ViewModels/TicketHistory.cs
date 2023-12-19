@@ -7,6 +7,7 @@ namespace BookingTourWeb_WebAPI.ViewModels
     {
         [Key]
         public long idKH { get; set; }
+        public long idTicket { get; set; }
         public DateTime ngaydatve { get; set; }
         public string noidi { get; set; }
         public string noiden { get; set; }

@@ -22,6 +22,7 @@ namespace BookingTourWeb_WebAPI.Controllers
             var data = await query.Select(f => new TicketHistory
             {
                 idKH = f.MaVeNavigation.MaKh,
+                idTicket = f.MaVeNavigation.MaVe,
                 ngaydatve = f.MaVeNavigation.NgayDatVe,
                 noidi = f.MaChuyenBayNavigation.NoiXuatPhat,
                 noiden = f.MaChuyenBayNavigation.NoiDen,
