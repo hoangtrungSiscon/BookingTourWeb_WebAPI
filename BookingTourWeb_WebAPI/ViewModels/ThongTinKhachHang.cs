@@ -9,7 +9,7 @@ namespace BookingTourWeb_WebAPI.ViewModels
         [Key]
         public long Makhachhang { get; set; }
         public long MaTaiKhoan { get; set; }
-        public string MatKhau { get; set; }
+        //public string MatKhau { get; set; }
         public string HoTenKh { get; set; } = null!;
         public string Phai { get; set; }
         public string Sdt { get; set; } = null!;
