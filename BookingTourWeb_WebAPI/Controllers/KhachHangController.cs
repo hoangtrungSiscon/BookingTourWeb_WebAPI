@@ -7,6 +7,8 @@ using System.Globalization;
 using System.Numerics;
 
 
+
+
 namespace BookingTourWeb_WebAPI.Controllers
 {
     [Route("api/[controller]/[action]")]
@@ -40,17 +42,19 @@ namespace BookingTourWeb_WebAPI.Controllers
             return await ThongTinKhachHang;
         }
 
-        [HttpGet]
+        /*[HttpGet]
         public async Task<ActionResult<List<Khachhang>>> GetKhachHangs()
         {
             if (_context.Khachhangs == null)
             {
                 return NotFound();
             }
+            var options = new JsonSerializerOptions { ReferenceHandler = ReferenceHandler.Preserve };
             return Ok(await _context.Khachhangs
-                .Include(p =>p.Ves)
+                .Include(p => p.Ves)
                 .ToListAsync());
-        }
+
+        }*/
         [HttpGet("{id}")]
         public async Task<ActionResult<Khachhang>> GetKhachHang(long id)
         {

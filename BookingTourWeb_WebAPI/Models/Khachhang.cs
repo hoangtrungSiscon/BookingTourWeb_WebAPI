@@ -20,4 +20,5 @@ public partial class Khachhang
     public virtual Taikhoan MaTaiKhoanNavigation { get; set; } = null!;
 
     public virtual ICollection<Ve> Ves { get; set; } = new List<Ve>();
+    
 }
