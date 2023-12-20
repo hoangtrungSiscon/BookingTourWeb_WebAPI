@@ -1,4 +1,5 @@
-﻿using BookingTourWeb_WebAPI.Models.InputModels;
+﻿using BookingTourWeb_WebAPI.Models;
+using BookingTourWeb_WebAPI.Models.InputModels;
 using BookingTourWeb_WebAPI.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -74,9 +75,9 @@ namespace BookingTourWeb_WebAPI.Controllers
         }
 
         [HttpDelete]
-        public async Task<ActionResult> DeleteAsync(long inputMaCTV)
+        public async Task<ActionResult> DeleteAsync(long inputMaVe)
         {
-            var MachiTietVe = await _context.Chitietves.Where(x => x.MaCTV == inputMaCTV).FirstOrDefaultAsync();
+            var MachiTietVe = await _context.Chitietves.Where(x => x.MaVe == inputMaVe).FirstOrDefaultAsync();
             if (MachiTietVe == null)
             {
                 return NotFound(MachiTietVe);
@@ -92,34 +93,74 @@ namespace BookingTourWeb_WebAPI.Controllers
             {
                 return StatusCode(400);
             }
+            
             _context.Chitietves.Update(input);
             await _context.SaveChangesAsync();
+
+
+            var chuyenBay = await _context.Chuyenbays.Where(x => x.MaChuyenBay == input.MaChuyenBay).FirstOrDefaultAsync();
+            if (input.LoaiVe == "BSN")
+            {
+                chuyenBay.SoLuongVeBsn = await _context.Chitietves.Where(f => f.MaChuyenBay == chuyenBay.MaChuyenBay && f.LoaiVe == "BSN" && f.TinhTrang != "Đã hủy").SumAsync(b => b.SoLuong);
+            }
+            else
+            {
+                chuyenBay.SoLuongVeEco = await _context.Chitietves.Where(f => f.MaChuyenBay == chuyenBay.MaChuyenBay && f.LoaiVe == "ECO" && f.TinhTrang != "Đã hủy").SumAsync(b => b.SoLuong);
+            }
+            _context.Chuyenbays.Update(chuyenBay);
+            _context.SaveChanges();
+
+
             return Ok(input);
         }
 
         [HttpPost]
         public async Task<ActionResult> CreateAsync(InputChiTietVe request)
         {
+            var chuyenBay = await _context.Chuyenbays.Where(x => x.MaChuyenBay == request.MaChuyenBay).FirstOrDefaultAsync();
+            if (request.LoaiVe == "BSN")
+            {
+                //var bsnSeatsAvailable = _context.Maybays.Where(e => e.MaMayBay == f.MaMayBay).Sum(a => a.SlgheBsn) - _context.Chitietves.Where(c => c.MaChuyenBay == f.MaChuyenBay && c.LoaiVe == "BSN").Sum(b => b.SoLuong);
+
+                var bsnSeatsAvailable = _context.Maybays.Where(e => e.MaMayBay == chuyenBay.MaMayBay).Sum(a => a.SlgheBsn) - _context.Chitietves.Where(c => c.MaChuyenBay == chuyenBay.MaChuyenBay && c.LoaiVe == "BSN" && c.TinhTrang != "Đã hủy").Sum(b => b.SoLuong);
+
+                if (request.SoLuong > bsnSeatsAvailable)
+                {
+                    return BadRequest();
+                }
+            }
+
+            if (request.LoaiVe == "ECO")
+            {
+                //var bsnSeatsAvailable = _context.Maybays.Where(e => e.MaMayBay == f.MaMayBay).Sum(a => a.SlgheBsn) - _context.Chitietves.Where(c => c.MaChuyenBay == f.MaChuyenBay && c.LoaiVe == "BSN").Sum(b => b.SoLuong);
+
+                var ecoSeatsAvailable = _context.Maybays.Where(e => e.MaMayBay == chuyenBay.MaMayBay).Sum(a => a.SlgheEco) - _context.Chitietves.Where(c => c.MaChuyenBay == chuyenBay.MaChuyenBay && c.LoaiVe == "ECO" && c.TinhTrang != "Đã hủy").Sum(b => b.SoLuong);
+
+                if (request.SoLuong > ecoSeatsAvailable)
+                {
+                    return BadRequest();
+                }
+            }
+
             var kh = await _context.Khachhangs.Where(x => x.GmailKh == request.GmailKh).FirstOrDefaultAsync();
             var newVe = new Ve() { MaVe = request.MaVe, MaKh= kh.MaKh, MaKhNavigation= kh, NgayDatVe= DateTime.Parse(request.NgayDatVe)};
             await _context.Ves.AddAsync(newVe);
             _context.SaveChanges();
             var newCTV = new Chitietve() { MaCTV = 0, MaVe = newVe.MaVe, LoaiVe = request.LoaiVe, MaChuyenBay=request.MaChuyenBay, SoLuong = request.SoLuong, TinhTrang= "Đang xác nhận", TongGia=request.TongGia };
             _context.Chitietves.Add(newCTV);
-            var chuyenBay = await _context.Chuyenbays.Where(x => x.MaChuyenBay == request.MaChuyenBay).FirstOrDefaultAsync();
-            if(request.LoaiVe == "BSN")
+            _context.SaveChanges();
+
+            if (request.LoaiVe == "BSN")
             {
-                chuyenBay.SoLuongVeBsn = chuyenBay.SoLuongVeBsn - request.SoLuong;
+                chuyenBay.SoLuongVeBsn = await _context.Chitietves.Where(f => f.MaChuyenBay == chuyenBay.MaChuyenBay && f.LoaiVe == "BSN" && f.TinhTrang != "Đã hủy").SumAsync(b => b.SoLuong);
             }
             else
             {
-                chuyenBay.SoLuongVeEco = chuyenBay.SoLuongVeEco - request.SoLuong;
+                chuyenBay.SoLuongVeEco = await _context.Chitietves.Where(f => f.MaChuyenBay == chuyenBay.MaChuyenBay && f.LoaiVe == "ECO" && f.TinhTrang != "Đã hủy").SumAsync(b => b.SoLuong);
             }
             _context.Chuyenbays.Update(chuyenBay);
             _context.SaveChanges();
-            //return Ok(newCTV);
-            //return CreatedAtAction("GetChiTietVe", new { id = newCTV.MaCTV }, newCTV);
-            return StatusCode(201);
+            return NoContent();
         }
 
         [HttpGet]

@@ -1,9 +1,11 @@
 ﻿using BookingTourWeb_WebAPI.Models;
 using BookingTourWeb_WebAPI.Models.InputModels;
+using BookingTourWeb_WebAPI.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace BookingTourWeb_WebAPI.Controllers
 {
@@ -18,16 +20,27 @@ namespace BookingTourWeb_WebAPI.Controllers
             this._context = context;
         }
         [HttpGet]
-        public async Task<ActionResult<List<Chuyenbay>>> GetAllAsync()
+        public async Task<ActionResult<List<ThongTinChuyenBay>>> GetAllAsync()
         {
-            return await _context.Chuyenbays.ToListAsync();
+            var flightList = await _context.Chuyenbays.Include(f => f.MaMayBayNavigation).Select(f => new ThongTinChuyenBay
+            {
+                MaChuyenBay = f.MaChuyenBay,
+                MaMayBay = f.MaMayBay,
+                TenMayBay = f.MaMayBayNavigation.TenMayBay,
+                NoiXuatPhat = f.NoiXuatPhat,
+                NoiDen = f.NoiDen,
+                NgayXuatPhat = f.NgayXuatPhat,
+                GioBay = f.GioBay,
+                DonGia = f.DonGia,
+                SoLuongVeBsn = _context.Maybays.Where(e => e.MaMayBay == f.MaMayBay).Sum(a => a.SlgheBsn) - _context.Chitietves.Where(c => c.MaChuyenBay == f.MaChuyenBay && c.LoaiVe == "BSN" && c.TinhTrang != "Đã hủy").Sum(b => b.SoLuong),
+                SoLuongVeEco = _context.Maybays.Where(e => e.MaMayBay == f.MaMayBay).Sum(a => a.SlgheEco) - _context.Chitietves.Where(c => c.MaChuyenBay == f.MaChuyenBay && c.LoaiVe == "ECO" && c.TinhTrang != "Đã hủy").Sum(b => b.SoLuong),
+            }).ToListAsync();
+            return flightList;
         }
 
         [HttpPost]
         public async Task<ActionResult<List<Chuyenbay>>> FilterChuyenBayAsync(InputFilterChuyenBay input)
         {
-            //var result = await _context.Chuyenbays.Where(x => x.NoiXuatPhat == input.fromPlace && x.NoiDen == input.toPlace && x.NgayXuatPhat >= DateTime.Parse(input.startDate)).ToListAsync();
-            //return Ok(result);
             var data = _context.Chuyenbays.AsQueryable();
             if (input == null)
             {
@@ -45,7 +58,11 @@ namespace BookingTourWeb_WebAPI.Controllers
             {
                 data = data.Where(f => f.NgayXuatPhat >= (DateTime.Parse(input.startDate)));
             }
-
+            foreach (var flight in data)
+            {
+                flight.SoLuongVeBsn = _context.Maybays.Where(e => e.MaMayBay == flight.MaMayBay).Sum(f => f.SlgheBsn) - _context.Chitietves.Where(c => c.MaChuyenBay == flight.MaChuyenBay && c.LoaiVe == "BSN" && c.TinhTrang != "Đã hủy").Sum(b => b.SoLuong);
+                flight.SoLuongVeEco = _context.Maybays.Where(e => e.MaMayBay == flight.MaMayBay).Sum(f => f.SlgheEco) - _context.Chitietves.Where(c => c.MaChuyenBay == flight.MaChuyenBay && c.LoaiVe == "ECO" && c.TinhTrang != "Đã hủy").Sum(b => b.SoLuong);
+            }
             return Ok(await data.ToListAsync());
         }
         [HttpGet]
@@ -75,8 +92,8 @@ namespace BookingTourWeb_WebAPI.Controllers
                     NoiXuatPhat = f.NoiXuatPhat,
                     NoiDen = f.NoiDen,
                     NgayXuatPhat = f.NgayXuatPhat,
-                    SoLuongVeBsn = f.SoLuongVeBsn,
-                    SoLuongVeEco = f.SoLuongVeEco,
+                    SoLuongVeBsn = _context.Maybays.Where(e => e.MaMayBay == f.MaMayBay).Sum(a => a.SlgheBsn) - _context.Chitietves.Where(c => c.MaChuyenBay == f.MaChuyenBay && c.LoaiVe == "BSN" && c.TinhTrang != "Đã hủy").Sum(b => b.SoLuong),
+                    SoLuongVeEco = _context.Maybays.Where(e => e.MaMayBay == f.MaMayBay).Sum(a => a.SlgheEco) - _context.Chitietves.Where(c => c.MaChuyenBay == f.MaChuyenBay && c.LoaiVe == "ECO" && c.TinhTrang != "Đã hủy").Sum(b => b.SoLuong),
                     GioBay = f.GioBay,
                     DonGia = f.DonGia
                 }

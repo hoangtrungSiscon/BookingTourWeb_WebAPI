@@ -53,18 +53,20 @@ namespace BookingTourWeb_WebAPI.Controllers
                 NoiDen = f.NoiDen,
                 NgayXuatPhat = f.NgayXuatPhat,
                 GioBay = f.GioBay,
-                DonGia = f.DonGia
+                DonGia = f.DonGia,
+                SoLuongVeBsn = f.SoLuongVeBsn,
+                SoLuongVeEco = f.SoLuongVeEco
             }).ToListAsync();
-            foreach (var item in thongtinchuyenbay)
-            {
-                item.SoLuongVeBsn = await _context.Chitietves
-                    .Where(ctv => ctv.MaChuyenBay == item.MaChuyenBay && ctv.LoaiVe == "BSN")
-                    .SumAsync(ctv => ctv.SoLuong);
+            //foreach (var item in thongtinchuyenbay)
+            //{
+            //    item.SoLuongVeBsn = await _context.Chitietves
+            //        .Where(ctv => ctv.MaChuyenBay == item.MaChuyenBay && ctv.LoaiVe == "BSN" && ctv.TinhTrang != "Đã hủy")
+            //        .SumAsync(ctv => ctv.SoLuong);
 
-                item.SoLuongVeEco = await _context.Chitietves
-                    .Where(ctv => ctv.MaChuyenBay == item.MaChuyenBay && ctv.LoaiVe == "ECO")
-                    .SumAsync(ctv => ctv.SoLuong);
-            }
+            //    item.SoLuongVeEco = await _context.Chitietves
+            //        .Where(ctv => ctv.MaChuyenBay == item.MaChuyenBay && ctv.LoaiVe == "ECO" && ctv.TinhTrang != "Đã hủy")
+            //        .SumAsync(ctv => ctv.SoLuong);
+            //}
             if (thongtinchuyenbay == null)
             {
                 return NotFound("ThongTinChuyenBay not found.");
@@ -121,16 +123,16 @@ namespace BookingTourWeb_WebAPI.Controllers
                                                DonGia = chuyenbay.DonGia,
                                            })
             .ToListAsync();
-            foreach (var item in thongtinchuyenbay)
-            {
-                item.SoLuongVeBsn = await _context.Chitietves
-                    .Where(ctv => ctv.MaChuyenBay == item.MaChuyenBay && ctv.LoaiVe == "BSN")
-                    .SumAsync(ctv => ctv.SoLuong);
+            //foreach (var item in thongtinchuyenbay)
+            //{
+            //    item.SoLuongVeBsn = await _context.Chitietves
+            //        .Where(ctv => ctv.MaChuyenBay == item.MaChuyenBay && ctv.LoaiVe == "BSN" && ctv.TinhTrang != "Đã hủy")
+            //        .SumAsync(ctv => ctv.SoLuong);
 
-                item.SoLuongVeEco = await _context.Chitietves
-                    .Where(ctv => ctv.MaChuyenBay == item.MaChuyenBay && ctv.LoaiVe == "ECO")
-                    .SumAsync(ctv => ctv.SoLuong);
-            }
+            //    item.SoLuongVeEco = await _context.Chitietves
+            //        .Where(ctv => ctv.MaChuyenBay == item.MaChuyenBay && ctv.LoaiVe == "ECO" && ctv.TinhTrang != "Đã hủy")
+            //        .SumAsync(ctv => ctv.SoLuong);
+            //}
             if (thongtinchuyenbay == null)
             {
                 return NotFound("ThongTinChuyenBay not found.");
