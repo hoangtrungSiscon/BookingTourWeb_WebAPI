@@ -20,7 +20,6 @@ namespace TourBookingWeb_API.Controllers
 
         public async Task<ActionResult<IEnumerable<ThongTinKhachHang>>> GetThongTinKhachHang()
         {
-            //return await _context.ThongTinKhachHang.ToListAsync();
             var ThongTinKhachHang = (from khachhang in _context.Khachhangs
                                      join Ve in _context.Ves
                                      on khachhang.MaKh equals Ve.MaKh
@@ -39,59 +38,9 @@ namespace TourBookingWeb_API.Controllers
                                          Sdt = khachhang.Sdt
                                      })
             .ToListAsync();
-            //return Ok(ThongTinKhachHang);
             return await ThongTinKhachHang;
         }
 
-        //===========================================================================
-        /*public async Task<ActionResult<IEnumerable<ThongTinKhachHang>>> GetThongTinKhachHang()
-        {
-            //return await _context.ThongTinKhachHang.ToListAsync();
-            var ThongTinKhachHang = (from khachhang in _context.Khachhangs
-                                     select new ThongTinKhachHang()
-                                     {
-                                         Makhachhang = khachhang.MaKh,
-                                         HoTenKh = khachhang.TenKh,
-                                         MaTaiKhoan = khachhang.MaTaiKhoan,
-                                         GmailKh = khachhang.GmailKh,
-                                         Sdt = khachhang.Sdt,
-                                         Phai = khachhang.Phai
-                                     })
-            .ToListAsync();
-            //return Ok(ThongTinKhachHang);
-            return await ThongTinKhachHang;
-        }*/
-        /*
-        [HttpGet("{makhachhang}")]
-        public async Task<ActionResult<IEnumerable<ThongTinKhachHang>>> GetThongTinKhachHangByMakhachhang(long makhachhang)
-        {
-            var ThongTinKhachHang = await (from khachhang in _context.Khachhangs
-                                           join Ve in _context.Ves
-                                           on khachhang.MaKh equals Ve.MaKh
-                                           join Chitietve in _context.Chitietves
-                                           on Ve.MaVe equals Chitietve.MaVe
-                                           join chuyenbay in _context.Chuyenbays
-                                           on Chitietve.MaChuyenBay equals chuyenbay.MaChuyenBay
-                                           where khachhang.MaKh.Equals(makhachhang)
-                                           select new ThongTinKhachHang()
-                                           {
-                                               Makhachhang = khachhang.MaKh,
-                                               HoTenKh = khachhang.TenKh,
-                                               Phai = khachhang.Phai,
-                                               GmailKh = khachhang.GmailKh,
-                                               MaChuyenBay = Chitietve.MaChuyenBay,
-                                               MaVe = Ve.MaVe,
-                                           })
-            .ToListAsync();
-
-            if (ThongTinKhachHang == null)
-            {
-                return NotFound("ThongTinKhachHang not found.");
-            }
-
-            return ThongTinKhachHang;
-        }
-        */
         [HttpGet("{makhachhang}")]
         public async Task<ActionResult<Object>> GetThongTinKhachHangByMakhachhang(long makhachhang)
         {

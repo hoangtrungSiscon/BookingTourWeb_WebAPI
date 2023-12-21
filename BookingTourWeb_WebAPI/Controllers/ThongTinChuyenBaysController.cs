@@ -174,7 +174,7 @@ namespace BookingTourWeb_WebAPI.Controllers
             }
             catch (DbUpdateException)
             {
-                if (ThongTinChuyenBayExists(chuyenbay.MaChuyenBay))
+                if (!ThongTinChuyenBayExists(chuyenbay.MaChuyenBay))
                 {
                     return Conflict();
                 }
@@ -261,7 +261,7 @@ namespace BookingTourWeb_WebAPI.Controllers
 
         private bool ThongTinChuyenBayExists(string id)
         {
-            return (_context.ThongTinChuyenBay?.Any(e => e.MaChuyenBay == id)).GetValueOrDefault();
+            return (_context.Chuyenbays?.Any(e => e.MaChuyenBay == id)).GetValueOrDefault();
         }
     }
 }

@@ -26,7 +26,6 @@ namespace BookingTourWeb_WebAPI.Controllers
 
         public async Task<ActionResult<IEnumerable<ThongTinKhachHang>>> GetThongTinKhachHang()
         {
-            //return await _context.ThongTinKhachHang.ToListAsync();
             var ThongTinKhachHang = (from khachhang in _context.Khachhangs
                                      select new ThongTinKhachHang()
                                      {
@@ -38,23 +37,10 @@ namespace BookingTourWeb_WebAPI.Controllers
                                          Sdt = khachhang.Sdt
                                      })
             .ToListAsync();
-            //return Ok(ThongTinKhachHang);
+
             return await ThongTinKhachHang;
         }
 
-        /*[HttpGet]
-        public async Task<ActionResult<List<Khachhang>>> GetKhachHangs()
-        {
-            if (_context.Khachhangs == null)
-            {
-                return NotFound();
-            }
-            var options = new JsonSerializerOptions { ReferenceHandler = ReferenceHandler.Preserve };
-            return Ok(await _context.Khachhangs
-                .Include(p => p.Ves)
-                .ToListAsync());
-
-        }*/
         [HttpGet("{id}")]
         public async Task<ActionResult<Khachhang>> GetKhachHang(long id)
         {

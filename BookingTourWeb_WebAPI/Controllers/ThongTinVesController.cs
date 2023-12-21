@@ -18,7 +18,7 @@ namespace BookingTourWeb_WebAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ThongTinVe>>> GetThongTinVe()
         {
-            //return await _context.ThongTinKhachHang.ToListAsync();
+        
             var ThongTinVe = (from ve in _context.Ves
                                      join chitietve in _context.Chitietves
                                      on ve.MaVe equals chitietve.MaVe
@@ -38,7 +38,6 @@ namespace BookingTourWeb_WebAPI.Controllers
                                      })
                                          
             .ToListAsync();
-            //return Ok(ThongTinKhachHang);
             return await ThongTinVe;
         }
     }

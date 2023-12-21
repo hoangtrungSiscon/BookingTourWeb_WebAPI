@@ -136,6 +136,10 @@ namespace BookingTourWeb_WebAPI.Controllers
                 VaiTro = 1,
             };
             _context.Taikhoans.Add(taiKhoan);
+            if (!TaiKhoanExists(taiKhoan.MaTaiKhoan))
+            {
+                return Conflict();
+            }
             await _context.SaveChangesAsync();
             var khachHang = new Khachhang()
             {
@@ -146,11 +150,21 @@ namespace BookingTourWeb_WebAPI.Controllers
                 GmailKh = request.GamilKH,
                 Phai=request.Phai,
             };
-            _context.Khachhangs.Add(khachHang);
             await _context.SaveChangesAsync();
-
+            _context.Khachhangs.Add(khachHang);
+            if (!KhachHangExists(khachHang.MaKh))
+            {
+                return Conflict();
+            }
             return request;
         }
-
+        private bool TaiKhoanExists(long id)
+        {
+            return (_context.Taikhoans?.Any(e => e.MaTaiKhoan == id)).GetValueOrDefault();
+        }
+        private bool KhachHangExists(long id)
+        {
+            return (_context.Khachhangs?.Any(e => e.MaKh == id)).GetValueOrDefault();
+        }
     }
 }

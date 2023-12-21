@@ -120,8 +120,7 @@ namespace BookingTourWeb_WebAPI.Controllers
             var chuyenBay = await _context.Chuyenbays.Where(x => x.MaChuyenBay == request.MaChuyenBay).FirstOrDefaultAsync();
             if (request.LoaiVe == "BSN")
             {
-                //var bsnSeatsAvailable = _context.Maybays.Where(e => e.MaMayBay == f.MaMayBay).Sum(a => a.SlgheBsn) - _context.Chitietves.Where(c => c.MaChuyenBay == f.MaChuyenBay && c.LoaiVe == "BSN").Sum(b => b.SoLuong);
-
+                
                 var bsnSeatsAvailable = _context.Maybays.Where(e => e.MaMayBay == chuyenBay.MaMayBay).Sum(a => a.SlgheBsn) - _context.Chitietves.Where(c => c.MaChuyenBay == chuyenBay.MaChuyenBay && c.LoaiVe == "BSN" && c.TinhTrang != "Đã hủy").Sum(b => b.SoLuong);
 
                 if (request.SoLuong > bsnSeatsAvailable)
@@ -132,7 +131,7 @@ namespace BookingTourWeb_WebAPI.Controllers
 
             if (request.LoaiVe == "ECO")
             {
-                //var bsnSeatsAvailable = _context.Maybays.Where(e => e.MaMayBay == f.MaMayBay).Sum(a => a.SlgheBsn) - _context.Chitietves.Where(c => c.MaChuyenBay == f.MaChuyenBay && c.LoaiVe == "BSN").Sum(b => b.SoLuong);
+                
 
                 var ecoSeatsAvailable = _context.Maybays.Where(e => e.MaMayBay == chuyenBay.MaMayBay).Sum(a => a.SlgheEco) - _context.Chitietves.Where(c => c.MaChuyenBay == chuyenBay.MaChuyenBay && c.LoaiVe == "ECO" && c.TinhTrang != "Đã hủy").Sum(b => b.SoLuong);
 

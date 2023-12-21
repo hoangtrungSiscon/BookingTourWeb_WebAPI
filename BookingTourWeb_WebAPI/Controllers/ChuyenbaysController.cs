@@ -31,29 +31,6 @@ namespace BookingTourWeb_WebAPI.Controllers
             return await _context.Chuyenbays.ToListAsync();
         }
 
-
-        //[HttpGet]
-        //public async Task<ActionResult<IEnumerable<ChuyenbayViewModel>>> GetChuyenbays()
-        //{
-        //    var chuyenbays = await _context.Chuyenbays.ToListAsync();
-        //        var chuyenbaysViewModel = chuyenbays.Select(chuyenbay => new ChuyenbayViewModel
-        //        {
-        //            MaChuyenBay = chuyenbay.MaChuyenBay,
-        //            MaMayBay = chuyenbay.MaMayBay,
-        //            GioBay = chuyenbay.GioBay.ToString("c"), // Chuyển đổi TimeSpan thành chuỗi
-        //            NoiXuatPhat = chuyenbay.NoiXuatPhat,
-        //            NoiDen = chuyenbay.NoiDen,
-        //            NgayXuatPhat = chuyenbay.NgayXuatPhat,
-        //            DonGia = chuyenbay.DonGia,
-        //            SoLuongVeBsn = chuyenbay.SoLuongVeBsn,
-        //            SoLuongVeEco = chuyenbay.SoLuongVeEco
-        //        }).ToList();
-
-        //    return chuyenbaysViewModel;
-        //}
-
-
-
         [HttpGet("{id}")]
         public async Task<ActionResult<Chuyenbay>> GetChuyenbay(string id)
         {
@@ -71,8 +48,6 @@ namespace BookingTourWeb_WebAPI.Controllers
             return chuyenbay;
         }
 
-        // PUT: api/Chuyenbays/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutChuyenbay(string id, Chuyenbay chuyenbay)
         {
@@ -129,54 +104,6 @@ namespace BookingTourWeb_WebAPI.Controllers
 
             return CreatedAtAction("GetChuyenbay", new { id = chuyenbay.MaChuyenBay }, chuyenbay);
         }
-
-
-        //[HttpPost]
-        //public async Task<ActionResult<ChuyenbayViewModel>> PostChuyenbay(ChuyenbayViewModel chuyenbayViewModel)
-        //{
-        //    if (chuyenbayViewModel == null)
-        //    {
-        //        return BadRequest("Invalid data.");
-        //    }
-
-        //    // Chuyển đổi dữ liệu từ ChuyenbayViewModel thành Chuyenbay
-        //    var chuyenbay = new Chuyenbay
-        //    {
-        //        MaChuyenBay = chuyenbayViewModel.MaChuyenBay,
-        //        MaMayBay = chuyenbayViewModel.MaMayBay,
-        //        // Chuyển đổi chuỗi GioBay thành TimeSpan
-        //        GioBay = TimeSpan.ParseExact(chuyenbayViewModel.GioBay, "c", CultureInfo.InvariantCulture),
-        //        NoiXuatPhat = chuyenbayViewModel.NoiXuatPhat,
-        //        NoiDen = chuyenbayViewModel.NoiDen,
-        //        NgayXuatPhat = chuyenbayViewModel.NgayXuatPhat,
-        //        DonGia = chuyenbayViewModel.DonGia,
-        //        SoLuongVeBsn = chuyenbayViewModel.SoLuongVeBsn,
-        //        SoLuongVeEco = chuyenbayViewModel.SoLuongVeEco
-        //    };
-
-        //    _context.Chuyenbays.Add(chuyenbay);
-
-        //    try
-        //    {
-        //        await _context.SaveChangesAsync();
-        //    }
-        //    catch (DbUpdateException)
-        //    {
-        //        if (ChuyenbayExists(chuyenbay.MaChuyenBay))
-        //        {
-        //            return Conflict();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
-
-        //    // Trả về lớp ViewModel để hiển thị lại dữ liệu đã được lưu
-        //    return CreatedAtAction("GetChuyenbay", new { id = chuyenbay.MaChuyenBay }, chuyenbayViewModel);
-        //}
-
-
 
 
         // DELETE: api/Chuyenbays/5
