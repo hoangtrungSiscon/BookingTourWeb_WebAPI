@@ -54,19 +54,11 @@ namespace BookingTourWeb_WebAPI.Controllers
                 NgayXuatPhat = f.NgayXuatPhat,
                 GioBay = f.GioBay,
                 DonGia = f.DonGia,
-                SoLuongVeBsn = f.SoLuongVeBsn,
-                SoLuongVeEco = f.SoLuongVeEco
-            }).ToListAsync();
-            //foreach (var item in thongtinchuyenbay)
-            //{
-            //    item.SoLuongVeBsn = await _context.Chitietves
-            //        .Where(ctv => ctv.MaChuyenBay == item.MaChuyenBay && ctv.LoaiVe == "BSN" && ctv.TinhTrang != "Đã hủy")
-            //        .SumAsync(ctv => ctv.SoLuong);
 
-            //    item.SoLuongVeEco = await _context.Chitietves
-            //        .Where(ctv => ctv.MaChuyenBay == item.MaChuyenBay && ctv.LoaiVe == "ECO" && ctv.TinhTrang != "Đã hủy")
-            //        .SumAsync(ctv => ctv.SoLuong);
-            //}
+                SoLuongVeBsn = _context.Chitietves.Where(c => c.MaChuyenBay == f.MaChuyenBay && c.LoaiVe == "BSN" && c.TinhTrang != "Đã hủy").Sum(b => b.SoLuong),
+                SoLuongVeEco = _context.Chitietves.Where(c => c.MaChuyenBay == f.MaChuyenBay && c.LoaiVe == "ECO" && c.TinhTrang != "Đã hủy").Sum(b => b.SoLuong),
+            }).ToListAsync();
+
             if (thongtinchuyenbay == null)
             {
                 return NotFound("ThongTinChuyenBay not found.");
@@ -74,32 +66,6 @@ namespace BookingTourWeb_WebAPI.Controllers
             //return Ok(thongtinchuyenbay);
             return thongtinchuyenbay;
         }
-        //-----------------------
-        /*[HttpGet("mostBookedFlightCode")]
-        public async Task<ActionResult<string>> GetMostBookedFlightCode()
-        {
-            try
-            {
-                var mostBookedFlightCode = await _context.Chuyenbays
-                    .GroupBy(chuyenbay => new { TruncatedMaChuyenBay = chuyenbay.MaChuyenBay.Substring(6) })
-                    .OrderByDescending(group => group.Count())
-                    .Select(group => group.Key.TruncatedMaChuyenBay)
-                    .FirstOrDefaultAsync();
-
-                if (mostBookedFlightCode == null)
-                {
-                    return NotFound("No bookings found.");
-                }
-
-                return mostBookedFlightCode;
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
-        }
-*/
-
         //===========================================================================
 
         [HttpGet("{maChuyenBay}")]
@@ -118,21 +84,11 @@ namespace BookingTourWeb_WebAPI.Controllers
                                                NoiDen = chuyenbay.NoiDen,
                                                NgayXuatPhat = chuyenbay.NgayXuatPhat,
                                                GioBay = chuyenbay.GioBay,
-                                               SoLuongVeBsn = chuyenbay.SoLuongVeBsn,
-                                               SoLuongVeEco = chuyenbay.SoLuongVeEco,
+                                               SoLuongVeBsn = _context.Chitietves.Where(c => c.MaChuyenBay == chuyenbay.MaChuyenBay && c.LoaiVe == "BSN" && c.TinhTrang != "Đã hủy").Sum(b => b.SoLuong),
+                                               SoLuongVeEco = _context.Chitietves.Where(c => c.MaChuyenBay == chuyenbay.MaChuyenBay && c.LoaiVe == "ECO" && c.TinhTrang != "Đã hủy").Sum(b => b.SoLuong),
                                                DonGia = chuyenbay.DonGia,
                                            })
             .ToListAsync();
-            //foreach (var item in thongtinchuyenbay)
-            //{
-            //    item.SoLuongVeBsn = await _context.Chitietves
-            //        .Where(ctv => ctv.MaChuyenBay == item.MaChuyenBay && ctv.LoaiVe == "BSN" && ctv.TinhTrang != "Đã hủy")
-            //        .SumAsync(ctv => ctv.SoLuong);
-
-            //    item.SoLuongVeEco = await _context.Chitietves
-            //        .Where(ctv => ctv.MaChuyenBay == item.MaChuyenBay && ctv.LoaiVe == "ECO" && ctv.TinhTrang != "Đã hủy")
-            //        .SumAsync(ctv => ctv.SoLuong);
-            //}
             if (thongtinchuyenbay == null)
             {
                 return NotFound("ThongTinChuyenBay not found.");

@@ -38,6 +38,25 @@ namespace BookingTourWeb_WebAPI.Controllers
             return flightList;
         }
 
+        [HttpGet]
+        public async Task<ActionResult<List<ThongTinChuyenBay>>> Top3NewestFlight()
+        {
+            var flightList = await _context.Chuyenbays.Include(f => f.MaMayBayNavigation).OrderByDescending(x => x.NgayXuatPhat).Take(3).Select(f => new ThongTinChuyenBay
+            {
+                MaChuyenBay = f.MaChuyenBay,
+                MaMayBay = f.MaMayBay,
+                TenMayBay = f.MaMayBayNavigation.TenMayBay,
+                NoiXuatPhat = f.NoiXuatPhat,
+                NoiDen = f.NoiDen,
+                NgayXuatPhat = f.NgayXuatPhat,
+                GioBay = f.GioBay,
+                DonGia = f.DonGia,
+                SoLuongVeBsn = _context.Maybays.Where(e => e.MaMayBay == f.MaMayBay).Sum(a => a.SlgheBsn) - _context.Chitietves.Where(c => c.MaChuyenBay == f.MaChuyenBay && c.LoaiVe == "BSN" && c.TinhTrang != "Đã hủy").Sum(b => b.SoLuong),
+                SoLuongVeEco = _context.Maybays.Where(e => e.MaMayBay == f.MaMayBay).Sum(a => a.SlgheEco) - _context.Chitietves.Where(c => c.MaChuyenBay == f.MaChuyenBay && c.LoaiVe == "ECO" && c.TinhTrang != "Đã hủy").Sum(b => b.SoLuong),
+            }).ToListAsync();
+            return flightList;
+        }
+
         [HttpPost]
         public async Task<ActionResult<List<ThongTinChuyenBay>>> FilterChuyenBayAsync(InputFilterChuyenBay input)
         {
