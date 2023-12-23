@@ -22,7 +22,7 @@ namespace BookingTourWeb_WebAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<List<ThongTinChuyenBay>>> GetAllAsync()
         {
-            var flightList = await _context.Chuyenbays.Include(f => f.MaMayBayNavigation).Select(f => new ThongTinChuyenBay
+            var flightList = await _context.Chuyenbays.Include(f => f.MaMayBayNavigation).OrderByDescending(c => c.NgayXuatPhat).Select(f => new ThongTinChuyenBay
             {
                 MaChuyenBay = f.MaChuyenBay,
                 MaMayBay = f.MaMayBay,
@@ -60,7 +60,8 @@ namespace BookingTourWeb_WebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<List<ThongTinChuyenBay>>> FilterChuyenBayAsync(InputFilterChuyenBay input)
         {
-            var data = _context.Chuyenbays.AsQueryable();
+            var data = _context.Chuyenbays.OrderByDescending(c => c.NgayXuatPhat).AsQueryable();
+
             if (!string.IsNullOrEmpty(input.fromPlace))
             {
                 data = data.Where(f => f.NoiXuatPhat == input.fromPlace);
@@ -71,7 +72,7 @@ namespace BookingTourWeb_WebAPI.Controllers
             }
             if (!string.IsNullOrEmpty(input.startDate))
             {
-                data = data.Where(f => f.NgayXuatPhat >= (DateTime.Parse(input.startDate)));
+                data = data.Where(f => f.NgayXuatPhat == (DateTime.Parse(input.startDate)));
             }
             var flightList = await data.Select(f => new ThongTinChuyenBay
             {
