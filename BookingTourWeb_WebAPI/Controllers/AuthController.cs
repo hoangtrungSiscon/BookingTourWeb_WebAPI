@@ -66,7 +66,16 @@ namespace BookingTourWeb_WebAPI.Controllers
         {
             var kh = await this._context.Khachhangs.Where(x => x.GmailKh == request.email).FirstOrDefaultAsync();
             var tk = await this._context.Taikhoans.Where(x => x.MaTaiKhoan == kh.MaTaiKhoan).FirstOrDefaultAsync();
-            tk.MatKhau = "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92";
+            //tk.MatKhau = "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92";
+            
+            
+            Random random = new Random();
+
+            // Tạo số nguyên ngẫu nhiên với 6 chữ số
+            int randomPassword = random.Next(100000, 999999);
+            tk.MatKhau = ToHash(randomPassword.ToString());
+
+
             this._context.Update(tk);
             await this._context.SaveChangesAsync();
             var mail = "flightdotservice@gmail.com";
@@ -75,7 +84,7 @@ namespace BookingTourWeb_WebAPI.Controllers
             message.From = new MailAddress(mail);
             message.To.Add(new MailAddress(request.email));
             message.Subject = "Reset password";
-            message.Body = "<html><body> Mật khẩu mới của bạn là: " + "123456" + "</body></html>";
+            message.Body = "<html><body> Mật khẩu mới của bạn là: " + randomPassword + "</body></html>";
             message.IsBodyHtml = true;
             var client = new SmtpClient("smtp.gmail.com")
             {

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BookingTourWeb_WebAPI.Controllers;
 using Microsoft.CodeAnalysis.CSharp;
+using System.Collections;
 
 namespace BookingTourWeb_WebAPI.Controllers
 {
@@ -23,7 +24,7 @@ namespace BookingTourWeb_WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ThongTinChuyenBay>>> GetThongTinChuyenBay(string? MaChuyenBay, string? NoiXuatPhat, string? NoiDen, string? NgayXuatPhat)
+        public async Task<ActionResult<IEnumerable>> GetThongTinChuyenBay(string? MaChuyenBay, string? NoiXuatPhat, string? NoiDen, string? NgayXuatPhat)
         {
             var query = _context.Chuyenbays.Include(f => f.MaMayBayNavigation).AsQueryable();
 
@@ -44,7 +45,7 @@ namespace BookingTourWeb_WebAPI.Controllers
                 query = query.Where(f => (f.NgayXuatPhat.Year + "-" + f.NgayXuatPhat.Month + "-" + f.NgayXuatPhat.Day) == NgayXuatPhat);
             }
 
-            var thongtinchuyenbay = await query.Select(f => new ThongTinChuyenBay
+            var thongtinchuyenbay = await query.Select(f => new
             {
                 MaChuyenBay = f.MaChuyenBay,
                 MaMayBay = f.MaMayBay,
@@ -55,8 +56,8 @@ namespace BookingTourWeb_WebAPI.Controllers
                 GioBay = f.GioBay,
                 DonGia = f.DonGia,
 
-                SoLuongVeBsn = _context.Chitietves.Where(c => c.MaChuyenBay == f.MaChuyenBay && c.LoaiVe == "BSN" && c.TinhTrang != "Đã hủy").Sum(b => b.SoLuong),
-                SoLuongVeEco = _context.Chitietves.Where(c => c.MaChuyenBay == f.MaChuyenBay && c.LoaiVe == "ECO" && c.TinhTrang != "Đã hủy").Sum(b => b.SoLuong),
+                SoLuongVeBsn = _context.Chitietves.Where(c => c.MaChuyenBay == f.MaChuyenBay && c.LoaiVe == "BSN" && c.TinhTrang != "Đã hủy").Sum(b => b.SoLuong).ToString() + '/' + f.MaMayBayNavigation.SlgheBsn.ToString(),
+                SoLuongVeEco = _context.Chitietves.Where(c => c.MaChuyenBay == f.MaChuyenBay && c.LoaiVe == "ECO" && c.TinhTrang != "Đã hủy").Sum(b => b.SoLuong).ToString() + '/' + f.MaMayBayNavigation.SlgheEco.ToString(),
             }).ToListAsync();
 
             if (thongtinchuyenbay == null)
