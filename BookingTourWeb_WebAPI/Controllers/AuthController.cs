@@ -71,7 +71,6 @@ namespace BookingTourWeb_WebAPI.Controllers
             
             Random random = new Random();
 
-            // Tạo số nguyên ngẫu nhiên với 6 chữ số
             int randomPassword = random.Next(100000, 999999);
             tk.MatKhau = ToHash(randomPassword.ToString());
 
