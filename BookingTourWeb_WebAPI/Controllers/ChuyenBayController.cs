@@ -74,6 +74,10 @@ namespace BookingTourWeb_WebAPI.Controllers
             {
                 data = data.Where(f => f.NgayXuatPhat == (DateTime.Parse(input.startDate)));
             }
+            if (!string.IsNullOrEmpty(input.id))
+            {
+                data = data.Where(f => f.MaChuyenBay.Contains(input.id));
+            }
             var flightList = await data.Select(f => new ThongTinChuyenBay
             {
                 MaChuyenBay = f.MaChuyenBay,

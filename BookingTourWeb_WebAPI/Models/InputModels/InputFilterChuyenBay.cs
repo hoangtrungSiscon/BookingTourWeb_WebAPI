@@ -5,5 +5,6 @@
         public string fromPlace { get; set; }
         public string toPlace { get; set; }
         public string startDate { get; set; }
+        public string id { get; set; }
     }
 }
