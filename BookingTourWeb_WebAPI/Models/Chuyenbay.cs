@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Text.Json.Serialization;
 
 namespace BookingTourWeb_WebAPI.Models;
 
@@ -24,7 +22,8 @@ public partial class Chuyenbay
     public int SoLuongVeBsn { get; set; }
 
     public int SoLuongVeEco { get; set; }
-    //[JsonIgnore]
-    //[AllowNull]
+
+    public virtual ICollection<Chitietve> Chitietves { get; set; } = new List<Chitietve>();
+
     public virtual Maybay MaMayBayNavigation { get; set; } = null!;
 }

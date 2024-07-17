@@ -1,17 +1,12 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
-using System.Text.Json.Serialization;
-using JsonIgnoreAttribute = Newtonsoft.Json.JsonIgnoreAttribute;
 
 namespace BookingTourWeb_WebAPI.Models;
 
 public partial class Chitietve
 {
-    
     public long MaCTV { get; set; }
+
     public long MaVe { get; set; }
 
     public string LoaiVe { get; set; } = null!;
@@ -23,10 +18,8 @@ public partial class Chitietve
     public string TinhTrang { get; set; } = null!;
 
     public decimal TongGia { get; set; }
-    [AllowNull]
-    [JsonIgnore]
-    public virtual Chuyenbay? MaChuyenBayNavigation { get; set; } = null!;
-    [AllowNull]
-    [JsonIgnore]
-    public virtual Ve? MaVeNavigation { get; set; } = null!;
+
+    public virtual Chuyenbay MaChuyenBayNavigation { get; set; } = null!;
+
+    public virtual Ve MaVeNavigation { get; set; } = null!;
 }
