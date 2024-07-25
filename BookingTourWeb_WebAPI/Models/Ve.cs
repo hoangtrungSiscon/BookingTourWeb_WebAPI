@@ -11,5 +11,9 @@ public partial class Ve
 
     public DateTime NgayDatVe { get; set; }
 
+    public virtual ICollection<Chitietve> Chitietves { get; set; } = new List<Chitietve>();
+
+    public virtual ICollection<Hoadon> Hoadons { get; set; } = new List<Hoadon>();
+
     public virtual Khachhang MaKhNavigation { get; set; } = null!;
 }
