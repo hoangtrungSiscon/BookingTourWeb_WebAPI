@@ -43,7 +43,7 @@ public partial class DvmayBayContext : DbContext
     {
         modelBuilder.Entity<Chitietve>(entity =>
         {
-            entity.HasKey(e => e.MaCTV).HasName("PK__CHITIETV__3DCB54E737FF69E2");
+            entity.HasKey(e => e.MaCTV);
 
             entity.ToTable("CHITIETVE");
 
@@ -92,7 +92,7 @@ public partial class DvmayBayContext : DbContext
 
         modelBuilder.Entity<Hoadon>(entity =>
         {
-            entity.HasKey(e => e.Idhoadon).HasName("PK__HOADON__0345E74BCEB596CE");
+            entity.HasKey(e => e.Idhoadon);
 
             entity.ToTable("HOADON");
 
