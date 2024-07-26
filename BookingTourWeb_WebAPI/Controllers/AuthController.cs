@@ -16,10 +16,10 @@ namespace BookingTourWeb_WebAPI.Controllers
     [ApiController]
     public class AuthController : Controller
     {
-        private readonly DvmayBayContext _context;
+        private readonly DVMayBayContext _context;
         private readonly IConfiguration _config;
 
-        public AuthController(DvmayBayContext context, IConfiguration config)
+        public AuthController(DVMayBayContext context, IConfiguration config)
         {
             this._context = context;
             this._config = config;

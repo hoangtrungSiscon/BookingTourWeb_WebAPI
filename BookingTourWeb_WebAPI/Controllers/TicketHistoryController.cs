@@ -8,9 +8,9 @@ namespace BookingTourWeb_WebAPI.Controllers
     [ApiController]
     public class TicketHistoryController : ControllerBase
     {
-        private readonly DvmayBayContext _context;
+        private readonly DVMayBayContext _context;
 
-        public TicketHistoryController(DvmayBayContext context)
+        public TicketHistoryController(DVMayBayContext context)
         {
             _context = context;
         }

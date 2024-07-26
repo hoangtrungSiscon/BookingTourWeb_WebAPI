@@ -11,9 +11,9 @@ namespace BookingTourWeb_WebAPI.Controllers
     [ApiController]
     public class ChiTietVeController : ControllerBase
     {
-        private readonly DvmayBayContext _context;
+        private readonly DVMayBayContext _context;
 
-        public ChiTietVeController(DvmayBayContext context)
+        public ChiTietVeController(DVMayBayContext context)
         {
             this._context = context;
         }
@@ -30,7 +30,7 @@ namespace BookingTourWeb_WebAPI.Controllers
             }).ToList();
             var chiTietVes = _context.Chitietves.ToList().Join(ves, x => x.MaVe, ve => ve.MaVe, (x, ve) => new
             {
-                MaCTV = x.MaCTV,
+                MaCTV = x.MaCtv,
                 MaVe = x.MaVe,
                 NgayDatVe = ve.NgayDatVe,
                 MaKh = ve.MaKh,
@@ -59,7 +59,7 @@ namespace BookingTourWeb_WebAPI.Controllers
             }).ToList();
             var chiTietVes = filterChiTietVes.Join(ves, x => x.MaVe, ve => ve.MaVe, (x, ve) => new
             {
-                MaCTV = x.MaCTV,
+                MaCTV = x.MaCtv,
                 MaVe = x.MaVe,
                 NgayDatVe = ve.NgayDatVe,
                 MaKh = ve.MaKh,
@@ -145,7 +145,7 @@ namespace BookingTourWeb_WebAPI.Controllers
             var newVe = new Ve() { MaVe = request.MaVe, MaKh= kh.MaKh, MaKhNavigation= kh, NgayDatVe= DateTime.Parse(request.NgayDatVe)};
             await _context.Ves.AddAsync(newVe);
             _context.SaveChanges();
-            var newCTV = new Chitietve() { MaCTV = 0, MaVe = newVe.MaVe, LoaiVe = request.LoaiVe, MaChuyenBay=request.MaChuyenBay, SoLuong = request.SoLuong, TinhTrang= "Đang xác nhận", TongGia=request.TongGia };
+            var newCTV = new Chitietve() { MaCtv = 0, MaVe = newVe.MaVe, LoaiVe = request.LoaiVe, MaChuyenBay=request.MaChuyenBay, SoLuong = request.SoLuong, TinhTrang= "Đang xác nhận", TongGia=request.TongGia };
             _context.Chitietves.Add(newCTV);
             _context.SaveChanges();
 
@@ -168,7 +168,7 @@ namespace BookingTourWeb_WebAPI.Controllers
             var query = _context.Chitietves
                 //.Include(f => f.MaChuyenBayNavigation)
                 .AsQueryable();
-            query = query.Where(f => f.MaCTV == MaCTV);
+            query = query.Where(f => f.MaCtv == MaCTV);
 
             var chitietve = await query.Select(f => new
             {

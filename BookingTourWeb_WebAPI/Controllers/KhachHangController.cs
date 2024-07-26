@@ -15,9 +15,9 @@ namespace BookingTourWeb_WebAPI.Controllers
     [ApiController]
     public class KhachHangsController : ControllerBase
     {
-        private readonly DvmayBayContext _context;
+        private readonly DVMayBayContext _context;
 
-        public KhachHangsController(DvmayBayContext context)
+        public KhachHangsController(DVMayBayContext context)
         {
             _context = context;
         }
@@ -95,7 +95,7 @@ namespace BookingTourWeb_WebAPI.Controllers
         {
             if (_context.Khachhangs == null)
             {
-                return Problem("Entity set 'DvmayBayContext.Khachhangs'  is null.");
+                return Problem("Entity set 'DVMayBayContext.Khachhangs'  is null.");
             }
             _context.Khachhangs.Add(khachhang);
             try

@@ -13,9 +13,9 @@ namespace BookingTourWeb_WebAPI.Controllers
     [ApiController]
     public class ChuyenBayController : ControllerBase
     {
-        private readonly DvmayBayContext _context;
+        private readonly DVMayBayContext _context;
 
-        public ChuyenBayController(DvmayBayContext context)
+        public ChuyenBayController(DVMayBayContext context)
         {
             this._context = context;
         }

@@ -11,9 +11,9 @@ namespace BookingTourWeb_WebAPI.Controllers
     [ApiController]
     public class TaiKhoanController : ControllerBase
     {
-        private readonly DvmayBayContext _context;
+        private readonly DVMayBayContext _context;
 
-        public TaiKhoanController(DvmayBayContext context)
+        public TaiKhoanController(DVMayBayContext context)
         {
             _context = context;
         }

@@ -13,9 +13,9 @@ namespace BookingTourWeb_WebAPI.Controllers
     [ApiController]
     public class MaybaysController : ControllerBase
     {
-        private readonly DvmayBayContext _context;
+        private readonly DVMayBayContext _context;
 
-        public MaybaysController(DvmayBayContext context)
+        public MaybaysController(DVMayBayContext context)
         {
             _context = context;
         }
@@ -86,7 +86,7 @@ namespace BookingTourWeb_WebAPI.Controllers
         {
           if (_context.Maybays == null)
           {
-              return Problem("Entity set 'DvmayBayContext.Maybays'  is null.");
+              return Problem("Entity set 'DVMayBayContext.Maybays'  is null.");
           }
             _context.Maybays.Add(maybay);
             try

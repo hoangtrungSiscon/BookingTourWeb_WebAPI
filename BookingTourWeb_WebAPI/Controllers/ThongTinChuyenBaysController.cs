@@ -16,9 +16,9 @@ namespace BookingTourWeb_WebAPI.Controllers
     [ApiController]
     public class ThongTinChuyenBaysController : ControllerBase
     {
-        private readonly DvmayBayContext _context;
+        private readonly DVMayBayContext _context;
 
-        public ThongTinChuyenBaysController(DvmayBayContext context)
+        public ThongTinChuyenBaysController(DVMayBayContext context)
         {
             _context = context;
         }
@@ -198,7 +198,7 @@ namespace BookingTourWeb_WebAPI.Controllers
         [HttpDelete("{maChuyenBay}")]
         public async Task<IActionResult> DeleteThongTinChuyenBay(string maChuyenBay)
         {
-            if (_context.ThongTinChuyenBay == null)
+            if (_context.Chuyenbays == null)
             {
                 return NotFound();
             }

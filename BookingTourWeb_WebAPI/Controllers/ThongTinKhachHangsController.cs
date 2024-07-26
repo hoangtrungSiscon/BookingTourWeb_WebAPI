@@ -9,9 +9,9 @@ namespace TourBookingWeb_API.Controllers
     [ApiController]
     public class ThongTinKhachhangsController : ControllerBase
     {
-        private readonly DvmayBayContext _context;
+        private readonly DVMayBayContext _context;
 
-        public ThongTinKhachhangsController(DvmayBayContext context)
+        public ThongTinKhachhangsController(DVMayBayContext context)
         {
             _context = context;
         }
