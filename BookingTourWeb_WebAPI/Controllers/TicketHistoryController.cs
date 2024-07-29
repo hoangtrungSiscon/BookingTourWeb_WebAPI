@@ -30,7 +30,7 @@ namespace BookingTourWeb_WebAPI.Controllers
                 soluong = f.SoLuong,
                 ngaydi = f.MaChuyenBayNavigation.NgayXuatPhat,
                 machuyen = f.MaChuyenBay,
-                gia = f.MaChuyenBayNavigation.DonGia,
+                gia = f.TongGia,
                 tinhtrang = f.TinhTrang,
             }).ToListAsync();
             if(data != null)
