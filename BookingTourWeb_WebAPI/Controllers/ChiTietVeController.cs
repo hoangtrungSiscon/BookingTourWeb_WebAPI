@@ -3,7 +3,9 @@ using BookingTourWeb_WebAPI.Models.InputModels;
 using BookingTourWeb_WebAPI.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace BookingTourWeb_WebAPI.Controllers
 {
@@ -93,9 +95,27 @@ namespace BookingTourWeb_WebAPI.Controllers
             {
                 return StatusCode(400);
             }
-            
+
             _context.Chitietves.Update(input);
             await _context.SaveChangesAsync();
+
+            if (input.TinhTrang == "Đã duyệt")
+            {
+                var hoadon = _context.Hoadons.Where(f => f.MaVe == input.MaVe).FirstOrDefault();
+
+                if (hoadon == null)
+                {
+                    return BadRequest();
+                }
+
+                hoadon.KieuThanhToan = "CASH";
+
+                hoadon.TinhTrangThanhToan = "Ðã thanh toán";
+
+                hoadon.NgayThanhToan = DateTime.Now;
+
+                _context.SaveChanges();
+            }
 
 
             var chuyenBay = await _context.Chuyenbays.Where(x => x.MaChuyenBay == input.MaChuyenBay).FirstOrDefaultAsync();
@@ -111,7 +131,7 @@ namespace BookingTourWeb_WebAPI.Controllers
             _context.SaveChanges();
 
 
-            return Ok(input);
+            return NoContent();
         }
 
         [HttpPost]
@@ -120,7 +140,7 @@ namespace BookingTourWeb_WebAPI.Controllers
             var chuyenBay = await _context.Chuyenbays.Where(x => x.MaChuyenBay == request.MaChuyenBay).FirstOrDefaultAsync();
             if (request.LoaiVe == "BSN")
             {
-                
+
                 var bsnSeatsAvailable = _context.Maybays.Where(e => e.MaMayBay == chuyenBay.MaMayBay).Sum(a => a.SlgheBsn) - _context.Chitietves.Where(c => c.MaChuyenBay == chuyenBay.MaChuyenBay && c.LoaiVe == "BSN" && c.TinhTrang != "Đã hủy").Sum(b => b.SoLuong);
 
                 if (request.SoLuong > bsnSeatsAvailable)
@@ -131,7 +151,7 @@ namespace BookingTourWeb_WebAPI.Controllers
 
             if (request.LoaiVe == "ECO")
             {
-                
+
 
                 var ecoSeatsAvailable = _context.Maybays.Where(e => e.MaMayBay == chuyenBay.MaMayBay).Sum(a => a.SlgheEco) - _context.Chitietves.Where(c => c.MaChuyenBay == chuyenBay.MaChuyenBay && c.LoaiVe == "ECO" && c.TinhTrang != "Đã hủy").Sum(b => b.SoLuong);
 
@@ -142,10 +162,10 @@ namespace BookingTourWeb_WebAPI.Controllers
             }
 
             var kh = await _context.Khachhangs.Where(x => x.GmailKh == request.GmailKh).FirstOrDefaultAsync();
-            var newVe = new Ve() { MaVe = request.MaVe, MaKh= kh.MaKh, MaKhNavigation= kh, NgayDatVe= DateTime.Parse(request.NgayDatVe)};
+            var newVe = new Ve() { MaVe = request.MaVe, MaKh = kh.MaKh, MaKhNavigation = kh, NgayDatVe = DateTime.Parse(request.NgayDatVe) };
             await _context.Ves.AddAsync(newVe);
             _context.SaveChanges();
-            var newCTV = new Chitietve() { MaCtv = 0, MaVe = newVe.MaVe, LoaiVe = request.LoaiVe, MaChuyenBay=request.MaChuyenBay, SoLuong = request.SoLuong, TinhTrang= "Đang xác nhận", TongGia=request.TongGia };
+            var newCTV = new Chitietve() { MaCtv = 0, MaVe = newVe.MaVe, LoaiVe = request.LoaiVe, MaChuyenBay = request.MaChuyenBay, SoLuong = request.SoLuong, TinhTrang = "Đang xác nhận", TongGia = request.TongGia };
             _context.Chitietves.Add(newCTV);
             _context.SaveChanges();
 
@@ -159,6 +179,16 @@ namespace BookingTourWeb_WebAPI.Controllers
             }
             _context.Chuyenbays.Update(chuyenBay);
             _context.SaveChanges();
+
+            var invoice = new Hoadon()
+            {
+                MaVe = newVe.MaVe,
+                TinhTrangThanhToan = "Chưa thanh toán"
+            };
+
+            _context.Hoadons.Add(invoice);
+            _context.SaveChanges();
+
             return NoContent();
         }
 
@@ -172,7 +202,7 @@ namespace BookingTourWeb_WebAPI.Controllers
 
             var chitietve = await query.Select(f => new
             {
-                
+
             }).FirstOrDefaultAsync();
             if (chitietve == null)
             {
@@ -180,6 +210,38 @@ namespace BookingTourWeb_WebAPI.Controllers
             }
             //return Ok(thongtinchuyenbay);
             return Ok(chitietve);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CheckValidity(InputChiTietVe request)
+        {
+            if ((request.LoaiVe != "BSN" && request.LoaiVe != "ECO") || request.SoLuong <= 0 || !_context.Chuyenbays.Any(f => f.MaChuyenBay == request.MaChuyenBay)) 
+                return BadRequest();
+
+            var chuyenBay = await _context.Chuyenbays.Where(x => x.MaChuyenBay == request.MaChuyenBay).FirstOrDefaultAsync();
+            if (request.LoaiVe == "BSN")
+            {
+
+                var bsnSeatsAvailable = _context.Maybays.Where(e => e.MaMayBay == chuyenBay.MaMayBay).Sum(a => a.SlgheBsn) - _context.Chitietves.Where(c => c.MaChuyenBay == chuyenBay.MaChuyenBay && c.LoaiVe == "BSN" && c.TinhTrang != "Đã hủy").Sum(b => b.SoLuong);
+
+                if (request.SoLuong > bsnSeatsAvailable)
+                {
+                    return BadRequest();
+                }
+            }
+
+            if (request.LoaiVe == "ECO")
+            {
+
+
+                var ecoSeatsAvailable = _context.Maybays.Where(e => e.MaMayBay == chuyenBay.MaMayBay).Sum(a => a.SlgheEco) - _context.Chitietves.Where(c => c.MaChuyenBay == chuyenBay.MaChuyenBay && c.LoaiVe == "ECO" && c.TinhTrang != "Đã hủy").Sum(b => b.SoLuong);
+
+                if (request.SoLuong > ecoSeatsAvailable)
+                {
+                    return BadRequest() ;
+                }
+            }
+            return Ok();
         }
     }
 }
