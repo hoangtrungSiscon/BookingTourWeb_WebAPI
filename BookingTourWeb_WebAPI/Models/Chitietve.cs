@@ -1,5 +1,10 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
+using JsonIgnoreAttribute = Newtonsoft.Json.JsonIgnoreAttribute;
 
 namespace BookingTourWeb_WebAPI.Models
 {
@@ -12,8 +17,11 @@ namespace BookingTourWeb_WebAPI.Models
         public int SoLuong { get; set; }
         public string TinhTrang { get; set; } = null!;
         public decimal TongGia { get; set; }
-
-        public virtual Chuyenbay MaChuyenBayNavigation { get; set; } = null!;
-        public virtual Ve MaVeNavigation { get; set; } = null!;
+        [AllowNull]
+        [JsonIgnore]
+        public virtual Chuyenbay? MaChuyenBayNavigation { get; set; } = null!;
+        [AllowNull]
+        [JsonIgnore]
+        public virtual Ve? MaVeNavigation { get; set; } = null!;
     }
 }
