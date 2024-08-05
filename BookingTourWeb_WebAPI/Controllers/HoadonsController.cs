@@ -136,21 +136,26 @@ namespace BookingTourWeb_WebAPI.Controllers
 
         // PUT: api/Hoadons/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}/{kieuthanhtoan}/{magiaodich}")]
-        public async Task<IActionResult> UpdatePayStatus(int id, string kieuthanhtoan, string magiaodich)
+        [HttpPut("{id}/{accountId}/{kieuthanhtoan}/{magiaodich}")]
+        public async Task<IActionResult> UpdatePayStatus(int id, int accountId, string kieuthanhtoan, string magiaodich)
         {
             if (!_context.Hoadons.Any(f => f.Idhoadon == id))
             {
                 return BadRequest();
             }
 
-            var hoadon = await _context.Hoadons.FirstOrDefaultAsync(f => f.Idhoadon == id);
+            var hoadon = await _context.Hoadons.FirstOrDefaultAsync(f => f.Idhoadon == id && f.MaVeNavigation.MaKh == accountId);
 
             _context.Entry(hoadon).State = EntityState.Modified;
 
             if (hoadon == null)
             {
                 return NotFound("Invoice not found");
+            }
+
+            if (hoadon.TinhTrangThanhToan == "Đã thanh toán")
+            {
+                return NoContent();
             }
 
             hoadon.TinhTrangThanhToan = "Đã thanh toán";
