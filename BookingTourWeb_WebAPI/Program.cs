@@ -57,7 +57,7 @@ app.UseCors(x => x
     .AllowCredentials()); // allow credentials
 app.UseHttpsRedirection();
 
-//app.UseCors(policy => policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+app.UseCors(policy => policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 
 app.UseAuthorization();
 app.UseAuthentication();
