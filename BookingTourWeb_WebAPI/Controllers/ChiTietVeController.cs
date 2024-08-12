@@ -30,7 +30,20 @@ namespace BookingTourWeb_WebAPI.Controllers
                 MaKh = x.MaKh,
                 TenKhachHang = khachHang.TenKh,
             }).ToList();
-            var chiTietVes = _context.Chitietves.ToList().Join(ves, x => x.MaVe, ve => ve.MaVe, (x, ve) => new
+            var hoadons = _context.Hoadons.ToList().Join(_context.Phuongthucthanhtoans, x => x.KieuThanhToan, pttt => pttt.KieuThanhToan, (x, pttt) => new {
+                MaGiaoDich = x.MaGiaoDich,
+                TenKieuThanhToan = pttt.TenKieuThanhToan,
+                MaVe = x.MaVe,
+            }).ToList();
+            var hoadonves = ves.Join(hoadons, ve => ve.MaVe, hoadon => hoadon.MaVe, (ve, hoadon) => new {
+                MaVe = ve.MaVe,
+                NgayDatVe = ve.NgayDatVe,
+                MaKh = ve.MaKh,
+                TenKhachHang = ve.TenKhachHang,
+                MaGiaoDich = hoadon.MaGiaoDich,
+                TenKieuThanhToan = hoadon.TenKieuThanhToan
+            }).ToList();
+            var chiTietVes = _context.Chitietves.ToList().Join(hoadonves, x => x.MaVe, ve => ve.MaVe, (x, ve) => new
             {
                 MaCTV = x.MaCtv,
                 MaVe = x.MaVe,
@@ -42,6 +55,8 @@ namespace BookingTourWeb_WebAPI.Controllers
                 SoLuong = x.SoLuong,
                 TinhTrang = x.TinhTrang,
                 TongGia = x.TongGia,
+                MaGiaoDich = ve.MaGiaoDich,
+                TenKieuThanhToan = ve.TenKieuThanhToan,
             }).ToList();
             return Ok(chiTietVes);
         }
@@ -59,7 +74,20 @@ namespace BookingTourWeb_WebAPI.Controllers
                 MaKh = x.MaKh,
                 TenKhachHang = khachHang.TenKh,
             }).ToList();
-            var chiTietVes = filterChiTietVes.Join(ves, x => x.MaVe, ve => ve.MaVe, (x, ve) => new
+            var hoadons = _context.Hoadons.ToList().Join(_context.Phuongthucthanhtoans, x => x.KieuThanhToan, pttt => pttt.KieuThanhToan, (x, pttt) => new {
+                MaGiaoDich = x.MaGiaoDich,
+                TenKieuThanhToan = pttt.TenKieuThanhToan,
+                MaVe = x.MaVe,
+            }).ToList();
+            var hoadonves = ves.Join(hoadons, ve => ve.MaVe, hoadon => hoadon.MaVe, (ve, hoadon) => new {
+                MaVe = ve.MaVe,
+                NgayDatVe = ve.NgayDatVe,
+                MaKh = ve.MaKh,
+                TenKhachHang = ve.TenKhachHang,
+                MaGiaoDich = hoadon.MaGiaoDich,
+                TenKieuThanhToan = hoadon.TenKieuThanhToan
+            }).ToList();
+            var chiTietVes = filterChiTietVes.Join(hoadonves, x => x.MaVe, ve => ve.MaVe, (x, ve) => new
             {
                 MaCTV = x.MaCtv,
                 MaVe = x.MaVe,
