@@ -141,6 +141,9 @@ namespace BookingTourWeb_WebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<InputRegister>> RegisterAsync(InputRegister request)
         {
+            if (_context.Taikhoans.Any(b => b.TaiKhoan1 == request.TaiKhoan1)) {
+                return BadRequest();
+            }
             var taiKhoan = new Taikhoan()
             {
                 MaTaiKhoan = 0,
@@ -149,6 +152,7 @@ namespace BookingTourWeb_WebAPI.Controllers
                 VaiTro = 1,
             };
             _context.Taikhoans.Add(taiKhoan);
+            await _context.SaveChangesAsync();
             if (!TaiKhoanExists(taiKhoan.MaTaiKhoan))
             {
                 return Conflict();
@@ -163,13 +167,15 @@ namespace BookingTourWeb_WebAPI.Controllers
                 GmailKh = request.GamilKH,
                 Phai=request.Phai,
             };
-            await _context.SaveChangesAsync();
+
             _context.Khachhangs.Add(khachHang);
+            await _context.SaveChangesAsync();
+            
             if (!KhachHangExists(khachHang.MaKh))
             {
                 return Conflict();
             }
-            return request;
+            return Ok(request);
         }
         private bool TaiKhoanExists(long id)
         {

@@ -38,15 +38,10 @@ namespace Backend.Tests
                 .EnableSensitiveDataLogging()
                 .Options;
 
-            var configuration = new ConfigurationBuilder()
-            .AddInMemoryCollection(new Dictionary<string, string>
-            {
-                {"Jwt:Key", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImN1b25nIiwibmJmIjoxNDc3NTY1NzI0LCJleHAiOjE0Nzc1NjY5MjQsImlhdCI6MTQ3NzU2NTcyNH0.6MzD1VwA5AcOcajkFyKhLYybr3h13iZjDyHm9zysDFQ"}, // Key bí mật
-                {"Jwt:Issuer", "http://localhost:28747/"}, // Issuer
-                {"Jwt:Audience", "http://localhost:28747/"}, // Audience
-            })
-            .Build();
-            _configuration = configuration;
+            _configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory()) // Thiết lập đường dẫn đến thư mục hiện tại
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true) // Đọc appsettings.json
+                .Build();
 
 
             _context = new DVMayBayContext(_contextOptions);
@@ -155,6 +150,71 @@ namespace Backend.Tests
 
             // Assert
             Assert.IsType<BadRequestResult>(result);
+        }
+
+        [Fact]
+        public async Task RegisterAsync_ReturnsOk_WithValidRequest()
+        {
+            // Arrange
+            var registerRequest = new InputRegister
+            {
+                TaiKhoan1 = "newuser",
+                MatKhau = "newpassword",
+                TenKH = "New User",
+                Sdt = "1234567890",
+                GamilKH = "newuser@example.com",
+                Phai = "Nam",
+            };
+
+            // Act
+            var result = await _controller.RegisterAsync(registerRequest);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result.Result);
+            Assert.Equal(registerRequest, okResult.Value); // Kiểm tra dữ liệu trả về
+
+            // Kiểm tra dữ liệu đã được lưu vào database
+            Assert.True(TaiKhoanExistsWithUsername(registerRequest.TaiKhoan1));
+            var taikhoan = _context.Taikhoans.FirstOrDefault(x => x.TaiKhoan1 == registerRequest.TaiKhoan1);
+            Assert.NotNull(taikhoan);
+            Assert.True(KhachHangExists(taikhoan.MaTaiKhoan));
+        }
+
+        //[Fact]
+        //public async Task RegisterAsync_ReturnsBadRequest_WithExistingUsername()
+        //{
+        //    // Arrange
+        //    var existingUser = new Taikhoan { TaiKhoan1 = "existinguser", MatKhau = ToHash("password"), VaiTro = 1 };
+        //    _context.Taikhoans.Add(existingUser);
+        //    await _context.SaveChangesAsync();
+
+        //    var registerRequest = new InputRegister {
+        //        TaiKhoan1 = "existinguser",
+        //        MatKhau = "newpassword",
+        //        TenKH = "New User",
+        //        Sdt = "1234567890",
+        //        GamilKH = "newuser@example.com",
+        //        Phai = "Nam",
+        //    };
+
+        //    // Act
+        //    var result = await _controller.RegisterAsync(registerRequest);
+
+        //    // Assert
+        //    Assert.IsType<BadRequestResult>(result.Result);
+        //}
+
+        private bool TaiKhoanExists(long id)
+        {
+            return (_context.Taikhoans?.Any(e => e.MaTaiKhoan == id)).GetValueOrDefault();
+        }
+        private bool TaiKhoanExistsWithUsername(string username)
+        {
+            return (_context.Taikhoans?.Any(e => e.TaiKhoan1 == username)).GetValueOrDefault();
+        }
+        private bool KhachHangExists(long id)
+        {
+            return (_context.Khachhangs?.Any(e => e.MaKh == id)).GetValueOrDefault();
         }
     }
 }
