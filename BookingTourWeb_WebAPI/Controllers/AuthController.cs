@@ -100,6 +100,11 @@ namespace BookingTourWeb_WebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult> LoginAsync(InputLogin request)
         {
+            if (request == null)
+            {
+                return BadRequest(); // Trả về false ngay nếu request là null
+            }
+
             var checkTK = await _context.Taikhoans.Where(x => x.TaiKhoan1 == request.TaiKhoan1).FirstOrDefaultAsync();
             if (checkTK != null)
             {
@@ -110,7 +115,7 @@ namespace BookingTourWeb_WebAPI.Controllers
                     return Ok(token);
                 }
             }
-            return Ok(false);
+            return BadRequest();
         }
 
         private string GenerateToken(Taikhoan user)
