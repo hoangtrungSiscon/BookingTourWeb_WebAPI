@@ -23,10 +23,10 @@ pipeline {
             }
         }
 
-        // Build ứng dụng với MSBuild
+        // Build ứng dụng với MSBuild, ignoring warnings
         stage('Build') {
             steps {
-                bat '"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe" BookingTourWeb_WebAPI.sln /p:Configuration=Release'
+                bat '"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe" BookingTourWeb_WebAPI.sln /p:Configuration=Release /p:WarningsAsErrors=false'
             }
         }
 
@@ -48,7 +48,7 @@ pipeline {
         stage('Run Docker Container') {
             steps {
                 script {
-                    def dockerRunCmd = "docker run -d -p 8080:80 --name bookingtourwebapi ${DOCKER_IMAGE}:${DOCKER_TAG}"
+                    def dockerRunCmd = "docker run -d -p 8081:80 --name bookingtourwebapi ${DOCKER_IMAGE}:${DOCKER_TAG}"
                     if (isUnix()) {
                         sh dockerRunCmd
                     } else {
