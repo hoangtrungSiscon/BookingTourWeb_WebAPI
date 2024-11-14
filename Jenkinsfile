@@ -67,6 +67,38 @@ stage('Run Docker Container') {
         }
     }
 }
+stage('Refresh Docker Container') {
+    steps {
+        script {
+            // Check if the container exists and is running
+            def checkContainerCmd = "docker ps -q -f name=bookingtourwebapi"
+            def containerExists = isUnix() ? sh(script: checkContainerCmd, returnStdout: true).trim() : bat(script: checkContainerCmd, returnStdout: true).trim()
+            
+            // If the container exists, stop and remove it, then run it again
+            if (containerExists) {
+                echo "Container 'bookingtourwebapi' is already running. Refreshing it."
+                
+                // Stop and remove the existing container
+                def stopAndRemoveCmd = "docker stop bookingtourwebapi && docker rm bookingtourwebapi"
+                if (isUnix()) {
+                    sh stopAndRemoveCmd
+                } else {
+                    bat stopAndRemoveCmd
+                }
+            } else {
+                echo "Container 'bookingtourwebapi' is not running."
+            }
+
+            // Run the container again (it will be like a fresh start)
+            def dockerRunCmd = "docker run -d -p 8081:80 --name bookingtourwebapi ${DOCKER_IMAGE}:${DOCKER_TAG}"
+            if (isUnix()) {
+                sh dockerRunCmd
+            } else {
+                bat dockerRunCmd
+            }
+        }
+    }
+}
 
     }
 
