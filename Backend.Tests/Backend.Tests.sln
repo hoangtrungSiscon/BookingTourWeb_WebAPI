@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35027.167
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Backend.Tests", "Backend.Tests.csproj", "{2DBBB5BD-9D80-4C81-8463-27171A5AE309}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookingTourWeb_WebAPI", "..\BookingTourWeb_WebAPI\BookingTourWeb_WebAPI.csproj", "{551AA0EA-D58C-4C6F-9DE8-DA2EC624DF25}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2DBBB5BD-9D80-4C81-8463-27171A5AE309}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2DBBB5BD-9D80-4C81-8463-27171A5AE309}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DBBB5BD-9D80-4C81-8463-27171A5AE309}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2DBBB5BD-9D80-4C81-8463-27171A5AE309}.Release|Any CPU.Build.0 = Release|Any CPU
+		{551AA0EA-D58C-4C6F-9DE8-DA2EC624DF25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{551AA0EA-D58C-4C6F-9DE8-DA2EC624DF25}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{551AA0EA-D58C-4C6F-9DE8-DA2EC624DF25}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{551AA0EA-D58C-4C6F-9DE8-DA2EC624DF25}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {080192F3-2899-4CD5-99CA-594E77B6C559}
+	EndGlobalSection
+EndGlobal

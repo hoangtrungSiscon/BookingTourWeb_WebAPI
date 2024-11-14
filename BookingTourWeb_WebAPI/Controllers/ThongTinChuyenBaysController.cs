@@ -24,7 +24,7 @@ namespace BookingTourWeb_WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable>> GetThongTinChuyenBay(string? MaChuyenBay, string? NoiXuatPhat, string? NoiDen, string? NgayXuatPhat)
+        public async Task<ActionResult<IEnumerable<FlightInfo>>> GetThongTinChuyenBay(string? MaChuyenBay, string? NoiXuatPhat, string? NoiDen, string? NgayXuatPhat)
         {
             var query = _context.Chuyenbays.Include(f => f.MaMayBayNavigation).AsQueryable();
 
@@ -45,7 +45,7 @@ namespace BookingTourWeb_WebAPI.Controllers
                 query = query.Where(f => (f.NgayXuatPhat.Year + "-" + f.NgayXuatPhat.Month + "-" + f.NgayXuatPhat.Day) == NgayXuatPhat);
             }
 
-            var thongtinchuyenbay = await query.Select(f => new
+            var thongtinchuyenbay = await query.Select(f => new FlightInfo
             {
                 MaChuyenBay = f.MaChuyenBay,
                 MaMayBay = f.MaMayBay,
@@ -65,7 +65,7 @@ namespace BookingTourWeb_WebAPI.Controllers
                 return NotFound("ThongTinChuyenBay not found.");
             }
             //return Ok(thongtinchuyenbay);
-            return thongtinchuyenbay;
+            return Ok(thongtinchuyenbay);
         }
         //===========================================================================
 
@@ -95,7 +95,7 @@ namespace BookingTourWeb_WebAPI.Controllers
                 return NotFound("ThongTinChuyenBay not found.");
             }
 
-            return thongtinchuyenbay;
+            return Ok(thongtinchuyenbay);
         }
 
 
@@ -131,7 +131,7 @@ namespace BookingTourWeb_WebAPI.Controllers
             }
             catch (DbUpdateException)
             {
-                if (!ThongTinChuyenBayExists(chuyenbay.MaChuyenBay))
+                if (ThongTinChuyenBayExists(chuyenbay.MaChuyenBay))
                 {
                     return Conflict();
                 }
