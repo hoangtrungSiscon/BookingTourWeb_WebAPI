@@ -1,52 +1,63 @@
 pipeline {
     agent any
 
+    environment {
+        DOCKER_IMAGE = 'bookingtourwebapi' // Tên Docker image
+        DOCKER_TAG = 'latest'            // Tag của Docker image
+    }
+
     stages {
         stage('Checkout') {
             steps {
-                // Lấy mã nguồn từ GitHub
                 git branch: 'master', url: 'https://github.com/hoangtrungSiscon/Tour-Booking-Web-Backend.git'
             }
         }
+
         stage('Restore Packages') {
             steps {
-                // Khôi phục các package NuGet
                 bat '"C:\\Program Files\\dotnet\\dotnet.exe" restore BookingTourWeb_WebAPI.sln'
             }
         }
+
         stage('Build') {
             steps {
-                // Build project (Windows)
                 bat '"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe" BookingTourWeb_WebAPI.sln /p:Configuration=Release'
-                
-                // Hoặc Linux (DotNet CLI)
-                // sh 'dotnet build BookingTourWeb_WebAPI.sln --configuration Release'
             }
         }
 
-        stage('Test') {
+        stage('Docker Build') {
             steps {
-                // Thực hiện kiểm tra nếu có
-                echo 'Running tests...'
-                // Ví dụ: sh 'dotnet test'
+                script {
+                    def dockerCmd = "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} ."
+                    if (isUnix()) {
+                        sh dockerCmd
+                    } else {
+                        bat dockerCmd
+                    }
+                }
             }
         }
 
-        stage('Deploy') {
+        stage('Docker Run') {
             steps {
-                // Triển khai ứng dụng (ví dụ: copy file đến server, chạy script)
-                echo 'Deploying application...'
-                // Ví dụ: sh './deploy.sh'
+                script {
+                    def dockerRunCmd = "docker run -d -p 8080:80 --name bookingtourwebapi ${DOCKER_IMAGE}:${DOCKER_TAG}"
+                    if (isUnix()) {
+                        sh dockerRunCmd
+                    } else {
+                        bat dockerRunCmd
+                    }
+                }
             }
         }
     }
 
     post {
         success {
-            echo 'Build and Deploy Successful!'
+            echo 'Docker Deployment Successful!'
         }
         failure {
-            echo 'Build or Deploy Failed!'
+            echo 'Docker Deployment Failed!'
         }
     }
 }
