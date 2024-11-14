@@ -7,25 +7,31 @@ pipeline {
     }
 
     stages {
+        // Lấy mã nguồn từ GitHub
         stage('Checkout') {
             steps {
-                git branch: 'master', url: 'https://github.com/hoangtrungSiscon/Tour-Booking-Web-Backend.git'
+                git branch: 'master', 
+                    url: 'https://github.com/hoangtrungSiscon/Tour-Booking-Web-Backend.git', 
+                    credentialsId: '3338ef97-97e2-48cf-92d4-b2318012413b'
             }
         }
 
+        // Khôi phục các package .NET
         stage('Restore Packages') {
             steps {
                 bat '"C:\\Program Files\\dotnet\\dotnet.exe" restore BookingTourWeb_WebAPI.sln'
             }
         }
 
+        // Build ứng dụng với MSBuild
         stage('Build') {
             steps {
                 bat '"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe" BookingTourWeb_WebAPI.sln /p:Configuration=Release'
             }
         }
 
-        stage('Docker Build') {
+        // Build Docker image
+        stage('Build Docker Image') {
             steps {
                 script {
                     def dockerCmd = "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} ."
@@ -38,7 +44,8 @@ pipeline {
             }
         }
 
-        stage('Docker Run') {
+        // Run Docker container
+        stage('Run Docker Container') {
             steps {
                 script {
                     def dockerRunCmd = "docker run -d -p 8080:80 --name bookingtourwebapi ${DOCKER_IMAGE}:${DOCKER_TAG}"
