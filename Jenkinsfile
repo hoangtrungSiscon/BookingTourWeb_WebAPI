@@ -31,34 +31,68 @@ pipeline {
             }
         }
 
-        // Build Docker image
         stage('Build Docker Image') {
-            steps {
-                script {
-                    def dockerCmd = "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} ."
-                    if (isUnix()) {
-                        sh dockerCmd
-                    } else {
-                        bat dockerCmd
-                    }
-                }
+    steps {
+        script {
+            def dockerCmd = "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} ."
+            if (isUnix()) {
+                sh dockerCmd
+            } else {
+                bat dockerCmd
             }
         }
+    }
+}
 
-        // Run Docker container
-        stage('Run Docker Container') {
-            steps {
-                script {
-                    def dockerRunCmd = "docker run -d -p 8081:80 --name bookingtourwebapi ${DOCKER_IMAGE}:${DOCKER_TAG}"
-                    if (isUnix()) {
-                        sh dockerRunCmd
-                    } else {
-                        bat dockerRunCmd
-                    }
+stage('Run Docker Container') {
+    steps {
+        script {
+            // Check if container is already running
+            def checkContainerCmd = "docker ps -q -f name=bookingtourwebapi"
+            def containerExists = isUnix() ? sh(script: checkContainerCmd, returnStdout: true).trim() : bat(script: checkContainerCmd, returnStdout: true).trim()
+            
+            if (containerExists) {
+                echo "Container 'bookingtourwebapi' is already running. Skipping creation."
+            } else {
+                def dockerRunCmd = "docker run -d -p 8081:80 --name bookingtourwebapi ${DOCKER_IMAGE}:${DOCKER_TAG}"
+                if (isUnix()) {
+                    sh dockerRunCmd
+                } else {
+                    bat dockerRunCmd
                 }
             }
         }
     }
+}
+
+        // Build Docker image
+    //     stage('Build Docker Image') {
+    //         steps {
+    //             script {
+    //                 def dockerCmd = "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} ."
+    //                 if (isUnix()) {
+    //                     sh dockerCmd
+    //                 } else {
+    //                     bat dockerCmd
+    //                 }
+    //             }
+    //         }
+    //     }
+
+    //     // Run Docker container
+    //     stage('Run Docker Container') {
+    //         steps {
+    //             script {
+    //                 def dockerRunCmd = "docker run -d -p 8081:80 --name bookingtourwebapi ${DOCKER_IMAGE}:${DOCKER_TAG}"
+    //                 if (isUnix()) {
+    //                     sh dockerRunCmd
+    //                 } else {
+    //                     bat dockerRunCmd
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
 
     post {
         success {
