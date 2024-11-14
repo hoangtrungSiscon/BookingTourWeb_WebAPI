@@ -27,7 +27,7 @@ pipeline {
         stage('Build') {
             steps {
                 bat '"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe" BookingTourWeb_WebAPI.sln /t:Restore,Build /p:Configuration=Release /p:WarningsAsErrors=false'
-'
+
             }
         }
 
