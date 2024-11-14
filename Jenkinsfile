@@ -8,7 +8,12 @@ pipeline {
                 git branch: 'master', url: 'https://github.com/hoangtrungSiscon/Tour-Booking-Web-Backend.git'
             }
         }
-
+        stage('Restore Packages') {
+            steps {
+                // Khôi phục các package NuGet
+                bat '"C:\\Program Files\\dotnet\\dotnet.exe" restore BookingTourWeb_WebAPI.sln'
+            }
+        }
         stage('Build') {
             steps {
                 // Build project (Windows)
