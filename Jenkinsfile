@@ -55,12 +55,16 @@ pipeline {
         stage('Run Docker Container') {
             steps {
                 script {
-                    def checkContainerCmd = "docker ps -q -f name=bookingtourwebapi"
+                    // Check if the container exists (running or stopped)
+                    def checkContainerCmd = "docker ps -a -q -f name=bookingtourwebapi"
                     def containerExists = isUnix() ? sh(script: checkContainerCmd, returnStdout: true).trim() : bat(script: checkContainerCmd, returnStdout: true).trim()
 
                     if (containerExists) {
-                        echo "Container 'bookingtourwebapi' is already running. Skipping creation."
+                        echo "Container 'bookingtourwebapi' exists. It may be stopped, skipping creation."
                     } else {
+                        echo "Container 'bookingtourwebapi' does not exist. Creating a new one."
+
+                        // Run the Docker container if it doesn't exist
                         def dockerRunCmd = "docker run -d -p 8081:80 --name bookingtourwebapi ${DOCKER_IMAGE}:${DOCKER_TAG}"
                         if (isUnix()) {
                             sh dockerRunCmd
