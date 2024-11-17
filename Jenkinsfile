@@ -2,12 +2,12 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = 'bookingtourwebapi' // Tên Docker image
-        DOCKER_TAG = 'latest'            // Tag của Docker image
+        DOCKER_IMAGE = 'bookingtourwebapi' // Docker image name
+        DOCKER_TAG = 'latest'             // Docker image tag
     }
 
     stages {
-        // Lấy mã nguồn từ GitHub
+        // Checkout stage
         stage('Checkout') {
             steps {
                 git branch: 'master', 
@@ -16,22 +16,26 @@ pipeline {
             }
         }
 
-        // Khôi phục các package .NET
+        // Restore packages
         stage('Restore Packages') {
             steps {
                 bat '"C:\\Program Files\\dotnet\\dotnet.exe" restore BookingTourWeb_WebAPI.sln'
             }
         }
 
-        // Build ứng dụng với MSBuild, ignoring warnings
+        // Build application
         stage('Build') {
             steps {
                 bat '"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe" BookingTourWeb_WebAPI.sln /t:Restore,Build /p:Configuration=Release /p:WarningsAsErrors=false'
-
             }
         }
 
-        
+        // Test stage
+        stage('Run Tests') {
+            steps {
+                bat '"C:\\Program Files\\dotnet\\dotnet.exe" test BookingTourWeb_WebAPI.sln --logger trx'
+            }
+        }
 
         // Build Docker image
         stage('Build Docker Image') {
@@ -47,13 +51,13 @@ pipeline {
             }
         }
 
+        // Run Docker container
         stage('Run Docker Container') {
             steps {
                 script {
-                    // Check if container is already running
                     def checkContainerCmd = "docker ps -q -f name=bookingtourwebapi"
                     def containerExists = isUnix() ? sh(script: checkContainerCmd, returnStdout: true).trim() : bat(script: checkContainerCmd, returnStdout: true).trim()
-            
+
                     if (containerExists) {
                         echo "Container 'bookingtourwebapi' is already running. Skipping creation."
                     } else {
@@ -68,39 +72,37 @@ pipeline {
             }
         }
 
+        // Refresh Docker container
         stage('Refresh Docker Container') {
             steps {
                 script {
-                    // Check if the container exists and is running
                     def checkContainerCmd = "docker ps -q -f name=bookingtourwebapi"
                     def containerExists = isUnix() ? sh(script: checkContainerCmd, returnStdout: true).trim() : bat(script: checkContainerCmd, returnStdout: true).trim()
-                    
-                    // If the container exists, stop and remove it, then run it again
+
                     if (containerExists) {
                         echo "Container 'bookingtourwebapi' is already running. Refreshing it."
-                        
-                        // Stop and remove the existing container
-                            def stopAndRemoveCmd = "docker stop bookingtourwebapi && docker rm bookingtourwebapi"
-                            if (isUnix()) {
-                                sh stopAndRemoveCmd
-                            } else {
-                                bat stopAndRemoveCmd
-                            }
+
+                        def stopAndRemoveCmd = "docker stop bookingtourwebapi && docker rm bookingtourwebapi"
+                        if (isUnix()) {
+                            sh stopAndRemoveCmd
                         } else {
-                            echo "Container 'bookingtourwebapi' is not running."
+                            bat stopAndRemoveCmd
                         }
-        
-                            // Run the container again (it will be like a fresh start)
-                            def dockerRunCmd = "docker run -d -p 8081:80 --name bookingtourwebapi ${DOCKER_IMAGE}:${DOCKER_TAG}"
-                            if (isUnix()) {
-                                sh dockerRunCmd
-                            } else {
-                                bat dockerRunCmd
-                            }
-                        }
+                    } else {
+                        echo "Container 'bookingtourwebapi' is not running."
+                    }
+
+                    def dockerRunCmd = "docker run -d -p 8081:80 --name bookingtourwebapi ${DOCKER_IMAGE}:${DOCKER_TAG}"
+                    if (isUnix()) {
+                        sh dockerRunCmd
+                    } else {
+                        bat dockerRunCmd
                     }
                 }
+            }
+        }
     }
+
     post {
         success {
             echo 'Docker Deployment Successful!'
