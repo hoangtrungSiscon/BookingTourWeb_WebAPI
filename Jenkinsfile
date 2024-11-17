@@ -73,35 +73,35 @@ pipeline {
         }
 
         // Refresh Docker container
-        stage('Refresh Docker Container') {
-    steps {
-        script {
-            def checkContainerCmd = "docker ps -q -f name=bookingtourwebapi"
-            def containerExists = isUnix() ? sh(script: checkContainerCmd, returnStdout: true).trim() : bat(script: checkContainerCmd, returnStdout: true).trim()
-
-            if (containerExists) {
-                echo "Container 'bookingtourwebapi' is already running. Restarting it."
-
-                // Command to restart the container with the updated image
-                def restartCmd = "docker container restart bookingtourwebapi"
-                if (isUnix()) {
-                    sh restartCmd
-                } else {
-                    bat restartCmd
-                }
-            } else {
-                echo "Container 'bookingtourwebapi' is not running. Starting a new container."
-
-                def dockerRunCmd = "docker run -d -p 8081:80 --name bookingtourwebapi ${DOCKER_IMAGE}:${DOCKER_TAG}"
-                if (isUnix()) {
-                    sh dockerRunCmd
-                } else {
-                    bat dockerRunCmd
-                }
-            }
-        }
-    }
-}
+        // stage('Refresh Docker Container') {
+        //     steps {
+        //         script {
+        //             def checkContainerCmd = "docker ps -q -f name=bookingtourwebapi"
+        //             def containerExists = isUnix() ? sh(script: checkContainerCmd, returnStdout: true).trim() : bat(script: checkContainerCmd, returnStdout: true).trim()
+        
+        //             if (containerExists) {
+        //                 echo "Container 'bookingtourwebapi' is already running. Restarting it."
+        
+        //                 // Command to restart the container with the updated image
+        //                 def restartCmd = "docker container restart bookingtourwebapi"
+        //                 if (isUnix()) {
+        //                     sh restartCmd
+        //                 } else {
+        //                     bat restartCmd
+        //                 }
+        //             } else {
+        //                 echo "Container 'bookingtourwebapi' is not running. Starting a new container."
+        
+        //                 def dockerRunCmd = "docker run -d -p 8081:80 --name bookingtourwebapi ${DOCKER_IMAGE}:${DOCKER_TAG}"
+        //                 if (isUnix()) {
+        //                     sh dockerRunCmd
+        //                 } else {
+        //                     bat dockerRunCmd
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
 
     }
 
