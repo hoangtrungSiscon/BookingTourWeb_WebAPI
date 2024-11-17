@@ -73,37 +73,37 @@ pipeline {
         }
 
         // Refresh Docker container
-        stage('Refresh Docker Container') {
-            steps {
-                script {
-                    // Check if the container is running or exists
-                    def checkContainerCmd = "docker ps -a -q -f name=bookingtourwebapi"
-                    def containerExists = isUnix() ? sh(script: checkContainerCmd, returnStdout: true).trim() : bat(script: checkContainerCmd, returnStdout: true).trim()
+        // stage('Refresh Docker Container') {
+        //     steps {
+        //         script {
+        //             // Check if the container is running or exists
+        //             def checkContainerCmd = "docker ps -a -q -f name=bookingtourwebapi"
+        //             def containerExists = isUnix() ? sh(script: checkContainerCmd, returnStdout: true).trim() : bat(script: checkContainerCmd, returnStdout: true).trim()
         
-                    if (containerExists) {
-                        echo "Container 'bookingtourwebapi' exists. Refreshing it."
+        //             if (containerExists) {
+        //                 echo "Container 'bookingtourwebapi' exists. Refreshing it."
         
-                        // Stop and remove the container if it exists
-                        def stopAndRemoveCmd = "docker stop bookingtourwebapi && docker rm bookingtourwebapi"
-                        if (isUnix()) {
-                            sh stopAndRemoveCmd
-                        } else {
-                            bat stopAndRemoveCmd
-                        }
-                    } else {
-                        echo "Container 'bookingtourwebapi' does not exist."
-                    }
+        //                 // Stop and remove the container if it exists
+        //                 def stopAndRemoveCmd = "docker stop bookingtourwebapi && docker rm bookingtourwebapi"
+        //                 if (isUnix()) {
+        //                     sh stopAndRemoveCmd
+        //                 } else {
+        //                     bat stopAndRemoveCmd
+        //                 }
+        //             } else {
+        //                 echo "Container 'bookingtourwebapi' does not exist."
+        //             }
         
-                    // Run the Docker container again
-                    def dockerRunCmd = "docker run -d -p 8081:80 --name bookingtourwebapi ${DOCKER_IMAGE}:${DOCKER_TAG}"
-                    if (isUnix()) {
-                        sh dockerRunCmd
-                    } else {
-                        bat dockerRunCmd
-                    }
-                }
-            }
-        }
+        //             // Run the Docker container again
+        //             def dockerRunCmd = "docker run -d -p 8081:80 --name bookingtourwebapi ${DOCKER_IMAGE}:${DOCKER_TAG}"
+        //             if (isUnix()) {
+        //                 sh dockerRunCmd
+        //             } else {
+        //                 bat dockerRunCmd
+        //             }
+        //         }
+        //     }
+        // }
 
     }
 
