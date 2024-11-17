@@ -1,4 +1,4 @@
-name: Build and Analyze
+name: Build
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    name: Build and analyze
+    name: Build
     runs-on: windows-latest
 
     steps:
