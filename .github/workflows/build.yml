@@ -41,11 +41,11 @@ jobs:
       - name: SonarQube Begin
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: "http://localhost:9000"
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         run: |
           dotnet-sonarscanner begin `
           /k:"FlightDotAPI" `
-          /d:sonar.host.url="http://localhost:9000" `
+          /d:sonar.host.url="${{ secrets.SONAR_HOST_URL }}" `
           /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
      
