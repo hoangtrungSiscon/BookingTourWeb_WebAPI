@@ -58,7 +58,8 @@ app.UseCors(x => x
 app.UseHttpsRedirection();
 
 //app.UseCors(policy => policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
-app.MapGet("/", () => "Welcome to Booking Tour Web API!");
+app.Run("http://localhost:8001");
+
 
 app.UseAuthorization();
 app.UseAuthentication();
