@@ -58,7 +58,7 @@ app.UseCors(x => x
 app.UseHttpsRedirection();
 
 //app.UseCors(policy => policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
-app.Run("http://localhost:8001");
+
 
 
 app.UseAuthorization();
