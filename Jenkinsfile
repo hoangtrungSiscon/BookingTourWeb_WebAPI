@@ -42,39 +42,66 @@ pipeline {
             steps {
                 script {
                     def dockerCmd = "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} ."
-                    bat dockerCmd
+                    if (isUnix()) {
+                        sh dockerCmd
+                    } else {
+                        bat dockerCmd
+                    }
                 }
             }
         }
 
-        // Run or Refresh Docker container
-        stage('Run or Refresh Docker Container') {
+        // Run Docker container
+        stage('Run Docker Container') {
             steps {
                 script {
                     // Check if the container exists (running or stopped)
                     def checkContainerCmd = "docker ps -a -q -f name=bookingtourwebapi"
-                    def containerExists = bat(script: checkContainerCmd, returnStdout: true).trim()
+                    def containerExists = isUnix() ? sh(script: checkContainerCmd, returnStdout: true).trim() : bat(script: checkContainerCmd, returnStdout: true).trim()
 
                     if (containerExists) {
-                        echo "Container 'bookingtourwebapi' exists. Checking if it's running."
-                        
-                        // Check if container is running
-                        def checkRunningCmd = "docker ps -q -f name=bookingtourwebapi"
-                        def containerRunning = bat(script: checkRunningCmd, returnStdout: true).trim()
+                        echo "Container 'bookingtourwebapi' exists. It may be stopped, skipping creation."
+                    } else {
+                        echo "Container 'bookingtourwebapi' does not exist. Creating a new one."
 
-                        if (containerRunning) {
-                            echo "Container 'bookingtourwebapi' is already running."
+                        // Run the Docker container if it doesn't exist
+                        def dockerRunCmd = "docker run -d -p 8081:80 --name bookingtourwebapi ${DOCKER_IMAGE}:${DOCKER_TAG}"
+                        if (isUnix()) {
+                            sh dockerRunCmd
                         } else {
-                            echo "Container 'bookingtourwebapi' exists but is stopped. Restarting the container."
-                            // Restart the container with the updated image
-                            def restartCmd = "docker container restart bookingtourwebapi"
+                            bat dockerRunCmd
+                        }
+                    }
+                }
+            }
+        }
+
+        // Refresh Docker container
+        stage('Refresh Docker Container') {
+            steps {
+                script {
+                    def checkContainerCmd = "docker ps -q -f name=bookingtourwebapi"
+                    def containerExists = isUnix() ? sh(script: checkContainerCmd, returnStdout: true).trim() : bat(script: checkContainerCmd, returnStdout: true).trim()
+        
+                    if (containerExists) {
+                        echo "Container 'bookingtourwebapi' is already running. Restarting it."
+        
+                        // Command to restart the container with the updated image
+                        def restartCmd = "docker container restart bookingtourwebapi"
+                        if (isUnix()) {
+                            sh restartCmd
+                        } else {
                             bat restartCmd
                         }
                     } else {
-                        echo "Container 'bookingtourwebapi' does not exist. Creating a new one."
-                        // Run the Docker container if it doesn't exist
+                        echo "Container 'bookingtourwebapi' is not running. Starting a new container."
+        
                         def dockerRunCmd = "docker run -d -p 8081:80 --name bookingtourwebapi ${DOCKER_IMAGE}:${DOCKER_TAG}"
-                        bat dockerRunCmd
+                        if (isUnix()) {
+                            sh dockerRunCmd
+                        } else {
+                            bat dockerRunCmd
+                        }
                     }
                 }
             }
