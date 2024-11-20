@@ -8,7 +8,7 @@ pipeline {
 
     stages {
         // Checkout stage
-        stage('Checkout') {
+        stage('Clone Repository') {
             steps {
                 git branch: 'master', 
                     url: 'https://github.com/hoangtrungSiscon/Tour-Booking-Web-Backend.git', 
