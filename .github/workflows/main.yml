@@ -1,0 +1,45 @@
+name: .NET Core CI
+
+on: [push]
+
+env:
+  AZURE_WEBAPP_NAME: FlightDotAPI    # Tên ứng dụng Web trên Azure
+  AZURE_WEBAPP_PACKAGE_PATH: './publish' # Đường dẫn xuất bản ứng dụng
+  DOTNET_VERSION: '6.0.x'           # Phiên bản .NET Core
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Bước 1: Checkout mã nguồn từ repository
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      
+      # Bước 2: Cài đặt .NET Core SDK
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }} 
+      
+      # Bước 3: Restore dependencies
+      - name: Restore Dependencies
+        run: dotnet restore ./BookingTourWeb_WebAPI.sln
+      
+      # Bước 4: Chạy kiểm thử
+      - name: Run Tests
+        run: dotnet test ./BookingTourWeb_WebAPI.sln --no-restore --verbosity normal
+        
+      # Bước 5: Build và Publish
+      - name: Build and Publish
+        run: |
+          dotnet build ./BookingTourWeb_WebAPI.sln --configuration Release
+          dotnet publish ./BookingTourWeb_WebAPI.sln -c Release --output '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}' 
+          
+      # Bước 6: Triển khai lên Azure Web App
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v3
+        with: 
+          app-name: ${{ env.AZURE_WEBAPP_NAME }} # Tên ứng dụng Web
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }} # Biến bảo mật chứa thông tin cấu hình xuất bản
+          package: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}'
