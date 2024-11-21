@@ -97,7 +97,7 @@ namespace BookingTourWeb_WebAPI.Controllers
                 return NotFound("ThongTinChuyenBay not found.");
             }
             //return Ok(thongtinchuyenbay);
-            return flightList;
+            //return flightList;
         }
         [HttpGet]
         public async Task<ActionResult<object>> GetByCodeAsync(string code)
