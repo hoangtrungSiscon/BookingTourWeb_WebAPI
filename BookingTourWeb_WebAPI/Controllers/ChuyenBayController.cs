@@ -124,7 +124,7 @@ namespace BookingTourWeb_WebAPI.Controllers
             }).FirstOrDefaultAsync();
             if (thongtinchuyenbay == null)
             {
-                return NotFound("ThongTinChuyenBay not found.");
+                return NotFound("ThongTinChuyenBay not founded error.");
             }
 
             return thongtinchuyenbay;
