@@ -24,11 +24,11 @@ jobs:
       
       # Bước 3: Restore dependencies
       - name: Restore Dependencies
-        run: dotnet restore ./BookingTourWeb_WebAPI.sln
+        run: dotnet restore ./Backend.Tests/Backend.Tests.csproj  # Đường dẫn đến file .csproj của dự án kiểm thử
       
       # Bước 4: Chạy kiểm thử
       - name: Run Tests
-        run: dotnet test ./BookingTourWeb_WebAPI.sln --logger "console;verbosity=detailed" --no-restore
+        run: dotnet test ./Backend.Tests/Backend.Tests.csproj --logger "console;verbosity=detailed"  # Chạy kiểm thử và log kết quả chi tiết
 
         
       # Bước 5: Build và Publish
@@ -39,6 +39,7 @@ jobs:
           
       # Bước 6: Triển khai lên Azure Web App
       - name: Deploy to Azure Web App
+        if: github.ref == 'refs/heads/main'  # Chỉ deploy khi nhánh là main
         uses: azure/webapps-deploy@v3
         with: 
           app-name: ${{ env.AZURE_WEBAPP_NAME }} # Tên ứng dụng Web
