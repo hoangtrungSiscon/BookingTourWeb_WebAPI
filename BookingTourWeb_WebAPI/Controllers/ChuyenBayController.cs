@@ -35,7 +35,7 @@ namespace BookingTourWeb_WebAPI.Controllers
                 SoLuongVeBsn = _context.Maybays.Where(e => e.MaMayBay == f.MaMayBay).Sum(a => a.SlgheBsn) - _context.Chitietves.Where(c => c.MaChuyenBay == f.MaChuyenBay && c.LoaiVe == "BSN" && c.TinhTrang != "Đã hủy").Sum(b => b.SoLuong),
                 SoLuongVeEco = _context.Maybays.Where(e => e.MaMayBay == f.MaMayBay).Sum(a => a.SlgheEco) - _context.Chitietves.Where(c => c.MaChuyenBay == f.MaChuyenBay && c.LoaiVe == "ECO" && c.TinhTrang != "Đã hủy").Sum(b => b.SoLuong),
             }).ToListAsync();
-            return flightList;
+            return null;
         }
 
         [HttpGet]
@@ -92,12 +92,12 @@ namespace BookingTourWeb_WebAPI.Controllers
                 SoLuongVeEco = _context.Maybays.Where(e => e.MaMayBay == f.MaMayBay).Sum(h => h.SlgheEco) - _context.Chitietves.Where(c => c.MaChuyenBay == f.MaChuyenBay && c.LoaiVe == "ECO" && c.TinhTrang != "Đã hủy").Sum(b => b.SoLuong)
             }).ToListAsync();
 
-            if (flightList != null)
+            if (flightList == null)
             {
                 return NotFound("ThongTinChuyenBay not found.");
             }
             //return Ok(thongtinchuyenbay);
-            //return flightList;
+            return flightList;
         }
         [HttpGet]
         public async Task<ActionResult<object>> GetByCodeAsync(string code)
