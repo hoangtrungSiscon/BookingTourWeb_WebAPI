@@ -92,7 +92,7 @@ namespace BookingTourWeb_WebAPI.Controllers
                 SoLuongVeEco = _context.Maybays.Where(e => e.MaMayBay == f.MaMayBay).Sum(h => h.SlgheEco) - _context.Chitietves.Where(c => c.MaChuyenBay == f.MaChuyenBay && c.LoaiVe == "ECO" && c.TinhTrang != "Đã hủy").Sum(b => b.SoLuong)
             }).ToListAsync();
 
-            if (flightList == null)
+            if (flightList != null)
             {
                 return NotFound("ThongTinChuyenBay not found.");
             }
