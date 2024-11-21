@@ -42,7 +42,7 @@ namespace BookingTourWeb_WebAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Khachhang>> GetKhachHang(long id)
+        public async Task<ActionResult<Khachhang>> GetKhachHang(int id)
         {
             if (_context.Khachhangs == null)
             {
