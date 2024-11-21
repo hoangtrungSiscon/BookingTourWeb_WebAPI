@@ -28,7 +28,7 @@ jobs:
       
       # Bước 4: Chạy kiểm thử
       - name: Run Tests
-        run: dotnet test ./BookingTourWeb_WebAPI.sln --logger "trx;LogFileName=test-results.trx" --no-restore
+        run: dotnet test ./BookingTourWeb_WebAPI.sln --logger "console;verbosity=detailed" --no-restore
 
         
       # Bước 5: Build và Publish
