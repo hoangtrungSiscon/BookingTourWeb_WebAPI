@@ -65,7 +65,7 @@ namespace BookingTourWeb_WebAPI.Controllers
                 return NotFound("ThongTinChuyenBay not found.");
             }
             //return Ok(thongtinchuyenbay);
-            return Ok(thongtinchuyenbay);
+            return null;
         }
         //===========================================================================
 
