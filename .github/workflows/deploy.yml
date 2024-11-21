@@ -12,6 +12,9 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
+    - name: Azure Login
+      uses: Azure/login@v2.2.0
+  
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
