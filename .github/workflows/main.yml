@@ -28,7 +28,7 @@ jobs:
       
       # Bước 4: Chạy kiểm thử
       - name: Run Tests
-        run: dotnet test ./BookingTourWeb_WebAPI.sln --no-restore --verbosity normal
+        run: dotnet test ./Backend.Tests/Backend.Tests.csproj --no-restore --verbosity normal
         
       # Bước 5: Build và Publish
       - name: Build and Publish
