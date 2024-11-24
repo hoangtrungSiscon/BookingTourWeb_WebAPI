@@ -1,6 +1,8 @@
 name: .NET Core CI
 
-on: [push]
+on: 
+  schedule:
+    - cron: '*/2 * * * *'  # Chạy mỗi 1 phút (cron syntax)
 
 env:
   AZURE_WEBAPP_NAME: FlightDotAPI    # Tên ứng dụng Web trên Azure
