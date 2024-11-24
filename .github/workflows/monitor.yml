@@ -5,9 +5,8 @@ on:
   push:
   # Kích hoạt tự động theo lịch trình
   schedule:
-    - cron: '* * * * *' # Chạy mỗi 15 phút
+    - cron: '*/5 * * * *' # Chạy mỗi 15 phút
   # Cho phép chạy thủ công
-  workflow_dispatch:
 
 jobs:
   ping_site:
