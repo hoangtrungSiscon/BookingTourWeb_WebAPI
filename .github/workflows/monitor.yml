@@ -14,4 +14,4 @@ jobs:
       uses: srt32/uptime@master
       with:
         url-to-hit: "https://flightdotapi.azurewebsites.net/health"
-        expected-statuses: "200,301"
+        expected-statuses: "200"
