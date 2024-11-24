@@ -37,6 +37,8 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.ResolveConflictingActions(apidescriptions => apidescriptions.First());
 });
+builder.Services.AddHealthChecks();
+
 var options = new JsonSerializerOptions
 {
     ReferenceHandler = ReferenceHandler.Preserve,
@@ -59,7 +61,6 @@ app.UseCors(x => x
 app.UseHttpsRedirection();
 
 //app.UseCors(policy => policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
-builder.Services.AddHealthChecks();
 
 app.MapHealthChecks("/health"); // Tạo endpoint /health
 app.UseAuthorization();
