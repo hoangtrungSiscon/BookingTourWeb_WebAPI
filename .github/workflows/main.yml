@@ -39,7 +39,7 @@ jobs:
           
       # Bước 6: Triển khai lên Azure Web App
       - name: Deploy to Azure Web App
-        if: github.ref == 'refs/heads/main'  # Chỉ deploy khi nhánh là main
+        if: github.ref == 'refs/heads/master'  # Chỉ deploy khi nhánh là main
         uses: azure/webapps-deploy@v3
         with: 
           app-name: ${{ env.AZURE_WEBAPP_NAME }} # Tên ứng dụng Web
