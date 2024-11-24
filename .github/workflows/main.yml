@@ -1,8 +1,6 @@
 name: .NET Core CI
 
-on: 
-  schedule:
-    - cron: '*/2 * * * *'  # Chạy mỗi 1 phút (cron syntax)
+on:  [push]  # Chạy mỗi 1 phút (cron syntax)
 
 env:
   AZURE_WEBAPP_NAME: FlightDotAPI    # Tên ứng dụng Web trên Azure
@@ -47,3 +45,9 @@ jobs:
           app-name: ${{ env.AZURE_WEBAPP_NAME }} # Tên ứng dụng Web
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }} # Biến bảo mật chứa thông tin cấu hình xuất bản
           package: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}'
+    # Bước 7: Tạo Artifact
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: my-app-artifact  # Tên của artifact
+          path: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}'  # Đường dẫn tới thư mục chứa kết quả build/publish
