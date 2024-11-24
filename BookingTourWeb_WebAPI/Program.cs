@@ -1,4 +1,4 @@
-global using BookingTourWeb_WebAPI.Models;
+﻿global using BookingTourWeb_WebAPI.Models;
 global using System.Linq;
 global using Newtonsoft.Json;
 global using BookingTourWeb_WebAPI.ViewModels;
@@ -59,7 +59,9 @@ app.UseCors(x => x
 app.UseHttpsRedirection();
 
 //app.UseCors(policy => policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+builder.Services.AddHealthChecks();
 
+app.MapHealthChecks("/health"); // Tạo endpoint /health
 app.UseAuthorization();
 app.UseAuthentication();
 
