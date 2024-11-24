@@ -1,8 +1,13 @@
 name: Monitor
 
 on:
+  # Kích hoạt khi có push lên các nhánh cụ thể
+  push:
+  # Kích hoạt tự động theo lịch trình
   schedule:
-    - cron: '*/5 * * * *'
+    - cron: '* * * * *' # Chạy mỗi 15 phút
+  # Cho phép chạy thủ công
+  workflow_dispatch:
 
 jobs:
   ping_site:
