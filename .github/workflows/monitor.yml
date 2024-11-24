@@ -5,8 +5,7 @@ on:
   push:
   # Kích hoạt tự động theo lịch trình
   schedule:
-    - cron: '*/5 * * * *' # Chạy mỗi 15 phút
-  # Cho phép chạy thủ công
+    - cron: '* * * * *' # Chạy mỗi 15 phút
 
 jobs:
   ping_site:
