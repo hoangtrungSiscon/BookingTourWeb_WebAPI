@@ -1,31 +1,16 @@
-name: Monitor Application
-
+  
 on:
   schedule:
-    # Chạy kiểm tra mỗi 15 phút
-    - cron: '*/1 * * * *'
-  workflow_dispatch: # Cho phép chạy thủ công khi cần
-
-env:
-  HEALTH_CHECK_URL: 'https://flightdotapi.azurewebsites.net/health' # URL kiểm tra sức khỏe
+    - cron: '* * * * *'
 
 jobs:
-  monitor:
+  ping_site:
     runs-on: ubuntu-latest
-
+    name: Ping the site
     steps:
-      # Bước 1: Giám sát ứng dụng qua endpoint
-      - name: Check Application Health
-        run: |
-          echo "Checking application health at ${{ env.HEALTH_CHECK_URL }}"
-          for i in {1..5}; do
-            response=$(curl -s -o /dev/null -w "%{http_code}" ${{ env.HEALTH_CHECK_URL }})
-            if [ "$response" -eq 200 ]; then
-              echo "Health check passed!"
-              exit 0
-            fi
-            echo "Health check failed (attempt $i). Retrying in 10 seconds..."
-            sleep 10
-          done
-          echo "Application health check failed after 5 attempts."
-          exit 1
+    - name: Check the site
+      id: hello
+      uses: srt32/uptime@master
+      with:
+        url-to-hit: "https://flightdotapi.azurewebsites.net"
+        expected-statuses: "200,301"
